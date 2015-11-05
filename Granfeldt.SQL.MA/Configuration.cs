@@ -44,7 +44,7 @@ namespace Granfeldt
 	{
 		public static string ConnectionString = "data source=192.168.0.31;initial catalog=test;persist security info=true;user id={username};password={password};multipleactiveresultsets=true";
 		public static string UserName = "sa";
-		public static string Password = "Laifen123";
+		public static string Password = "";
 		public static string Domain = "";
 
 		public static string TableNameSingle = "object";
