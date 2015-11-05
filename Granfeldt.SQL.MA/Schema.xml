@@ -1,0 +1,50 @@
+﻿<configuration>
+	<singlevaluetable>
+		<name>object</name>
+		<reserved>
+			<attribute name='_id' type='anchor' />
+			<attribute name='_objectclass' type='objectclass' />
+			<attribute name='_rowversion' type='rowversion' />
+			<attribute name='_isdeleted' type='isdeleted' />
+			<attribute name='_id' type='dn' />
+		</reserved>
+	</singlevaluetable>
+	<multivaluetable>
+		<name>objectmv</name>
+		<reserved>
+			<attribute name='_id' type='anchor' />
+			<!--necessary???-->
+			<attribute name='_rowversion' type='rowversion' />
+			<attribute name='_isdeleted' type='isdeleted' />
+			<attribute name='_refid' type='mvbackreference' />
+			<attribute name='_id' type='dn' />
+		</reserved>
+	</multivaluetable>
+
+	<objectclasses>
+		<objectclass name='person'>
+			<overrides>
+				<attribute name='managerid' schematype='reference' />
+				<attribute name='organizationalid' schematype='string' />
+			</overrides>
+			<excludes>
+				<attribute name='grouptype'/>
+				<attribute name='member'/>
+				<attribute name='managedby'/>
+			</excludes>
+		</objectclass>
+
+		<objectclass name='group'>
+			<overrides>
+				<attribute name='managedby' schematype='reference' />
+			</overrides>
+			<excludes>
+				<attribute name='managerid'/>
+				<attribute name='firstname'/>
+				<attribute name='lastname'/>
+				<attribute name='proxyaddresses'/>
+			</excludes>
+		</objectclass>
+	</objectclasses>
+
+</configuration>
