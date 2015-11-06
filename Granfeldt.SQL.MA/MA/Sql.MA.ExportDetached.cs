@@ -65,6 +65,11 @@ namespace Granfeldt
 				Tracer.TraceInformation("export-batch-size {0:n0}", ExportBatchSize);
 
 				methods.OpenConnection();
+
+				if (Configuration.RunBeforeExport)
+				{
+					methods.RunStoredProcedure(Configuration.ExportCommandBefore);
+				}
 			}
 			catch (Exception ex)
 			{
@@ -102,17 +107,28 @@ namespace Granfeldt
 					}
 					string objectClass = exportChange.ObjectType;
 
+					if (Configuration.RunBeforeObjectExport)
+					{
+						List<SqlParameter> parameters = new List<SqlParameter>();
+						parameters.Add(new SqlParameter("anchor", anchor));
+						parameters.Add(new SqlParameter("action", exportChange.ObjectModificationType.ToString()));
+						methods.RunStoredProcedure(Configuration.ExportObjectCommandBefore, parameters);
+					}
+
 					Tracer.TraceInformation("export-object {0}, cs-id: {1}, anchor: {2}, dn: {3} [{4}]", objectClass, exportChange.Identifier, anchor, exportChange.DN, exportChange.ObjectModificationType);
 					try
 					{
+						// first try to handle a delete
 						if (exportChange.ObjectModificationType == ObjectModificationType.Delete)
 						{
 							if (anchor == null)
+							{
 								throw new InvalidOperationException("cannot-delete-without-anchor");
+							}
 
                             Tracer.TraceInformation("deleting-record type: {1}, anchor: {0}", objectClass, anchor);
 							methods.DeleteRecord(anchor, Configuration.HasMultivalueTable, handleSoftDeletion);
-							results.CSEntryChangeResults.Add(CSEntryChangeResult.Create(exportChange.Identifier, null, MAExportError.ExportErrorCustomContinueRun, "dummy-error", "remove-this-error-after-testing"));
+							results.CSEntryChangeResults.Add(CSEntryChangeResult.Create(exportChange.Identifier, attrchanges, MAExportError.Success));
 							continue;
 						}
 
@@ -130,7 +146,6 @@ namespace Granfeldt
 								methods.AddRecord(anchor, out newAnchor, objectClass);
 							}
 							attrchanges.Add(AttributeChange.CreateAttributeAdd(anchor, newAnchor));
-							continue;
 						}
 
 						// updating attributes is common for add and update
@@ -170,11 +185,20 @@ namespace Granfeldt
 								methods.AddSingleValue(anchor, attributeChange, vc.Value);
 							}
 						}
-						results.CSEntryChangeResults.Add(CSEntryChangeResult.Create(exportChange.Identifier, attrchanges, MAExportError.ExportErrorCustomContinueRun, "dummy-error", "remove-this-error-after-testing"));
+						results.CSEntryChangeResults.Add(CSEntryChangeResult.Create(exportChange.Identifier, attrchanges, MAExportError.Success));
+
+						if (Configuration.RunAfterObjectExport)
+						{
+							List<SqlParameter> parameters = new List<SqlParameter>();
+							parameters.Add(new SqlParameter("anchor", anchor));
+							parameters.Add(new SqlParameter("action", exportChange.ObjectModificationType.ToString()));
+							methods.RunStoredProcedure(Configuration.ExportObjectCommandAfter, parameters);
+						}
 					}
 					catch (Exception exportEx)
 					{
 						Tracer.TraceError("putexportentriesdetached", exportEx);
+						results.CSEntryChangeResults.Add(CSEntryChangeResult.Create(exportChange.Identifier, attrchanges, MAExportError.ExportErrorCustomContinueRun, "export-exception", exportEx.Message));
 						throw;
 					}
 				}
@@ -195,6 +219,10 @@ namespace Granfeldt
 			Tracer.Enter("closeexportconnectiondetached");
 			try
 			{
+				if (Configuration.RunAfterExport)
+				{
+					methods.RunStoredProcedure(Configuration.ExportCommandAfter);
+				}
 				methods.CloseConnection();
 			}
 			catch (Exception ex)

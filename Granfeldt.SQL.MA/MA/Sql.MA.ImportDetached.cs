@@ -260,6 +260,11 @@ namespace Granfeldt
 				importCsEntryQueue = new List<CSEntryChange>();
 
 				methods.OpenConnection();
+
+				if (Configuration.RunBeforeImport)
+				{
+					methods.RunStoredProcedure(Configuration.ImportCommandBefore);
+				}
 			}
 			catch (Exception ex)
 			{
@@ -350,6 +355,10 @@ namespace Granfeldt
 			CloseImportConnectionResults result = new CloseImportConnectionResults();
 			try
 			{
+				if (Configuration.RunAfterImport)
+				{
+					methods.RunStoredProcedure(Configuration.ImportCommandAfter);
+				}
 				methods.CloseConnection();
 				if (importAnchors != null)
 				{

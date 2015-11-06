@@ -57,10 +57,60 @@ namespace Granfeldt
 		public static string DNColumn = "_id";
 		public static string BackReferenceColumn = "_refid";
 
+		public static string ImportCommandBefore = "";
+		public static string ImportCommandAfter = "";
+		public static string ExportCommandBefore = "";
+		public static string ExportCommandAfter = "";
+		public static string ExportObjectCommandBefore = "";
+		public static string ExportObjectCommandAfter = "";
+
 		public static ObjectClassType ObjectClassType = ObjectClassType.Column;
 		public static DeltaColumnType DeltaColumnType = DeltaColumnType.Rowversion;
 
 		public static SchemaConfiguration Schema = new SchemaConfiguration();
+
+		public static bool RunBeforeImport
+		{
+			get
+			{
+				return !string.IsNullOrEmpty(ImportCommandBefore);
+			}
+		}
+		public static bool RunAfterImport
+		{
+			get
+			{
+				return !string.IsNullOrEmpty(ImportCommandAfter);
+			}
+		}
+		public static bool RunBeforeExport
+		{
+			get
+			{
+				return !string.IsNullOrEmpty(ExportCommandBefore);
+			}
+		}
+		public static bool RunAfterExport
+		{
+			get
+			{
+				return !string.IsNullOrEmpty(ExportCommandAfter);
+			}
+		}
+		public static bool RunBeforeObjectExport
+		{
+			get
+			{
+				return !string.IsNullOrEmpty(ExportObjectCommandBefore);
+			}
+		}
+		public static bool RunAfterObjectExport
+		{
+			get
+			{
+				return !string.IsNullOrEmpty(ExportObjectCommandAfter);
+			}
+		}
 
 		public static bool HasMultivalueTable
 		{
@@ -104,6 +154,13 @@ namespace Granfeldt
 
 			public const string TypeOfObjectClass = "Object class";
 			public const string ColumnOrValueObjectClass = "Object class (name or column)";
+
+			public const string ImportCommandBefore = "Run before import";
+			public const string ImportCommandAfter = "Run after import";
+			public const string ExportCommandBefore = "Run before export";
+			public const string ExportCommandAfter = "Run after export";
+			public const string ExportObjectCommandBefore = "Run before export object";
+			public const string ExportObjectCommandAfter = "Run after export object";
 		}
 		public static IEnumerable<string> ReservedColumnNames
 		{

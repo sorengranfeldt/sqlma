@@ -15,14 +15,22 @@ namespace Granfeldt
 			newId = anchor;
 			try
 			{
-
-				if anchor == null diferent query
-
-
-				string query = string.Format("insert into [{0}] ([{1}], [{2}]) values (@anchor, @objectclass)", Configuration.TableNameSingle, Configuration.AnchorColumn, Configuration.ObjectClass);
-				if (objectClass == null)
+				string query;
+				if (anchor == null)
 				{
-					query = string.Format("insert into [{0}] ([{1}]) values (@anchor)", Configuration.TableNameSingle, Configuration.AnchorColumn);
+					query = string.Format("insert into [{0}] ([{1}]) values (@objectclass)", Configuration.TableNameSingle, Configuration.ObjectClass);
+					if (Configuration.ObjectClassType == ObjectClassType.Fixed)
+					{
+						query = string.Format("insert into [{0}] default values", Configuration.TableNameSingle);
+					}
+				}
+				else
+				{
+					query = string.Format("insert into [{0}] ([{1}], [{2}]) values (@anchor, @objectclass)", Configuration.TableNameSingle, Configuration.AnchorColumn, Configuration.ObjectClass);
+					if (Configuration.ObjectClassType == ObjectClassType.Fixed)
+					{
+						query = string.Format("insert into [{0}] ([{1}]) values (@anchor)", Configuration.TableNameSingle, Configuration.AnchorColumn);
+					}
 				}
 				query = string.Concat("; select scope_identity();", query);
 				using (SqlCommand cmd = new SqlCommand(query, con))
@@ -39,14 +47,13 @@ namespace Granfeldt
 			}
 			catch (Exception ex)
 			{
-				Tracer.TraceError("addsinglevalue", ex);
+				Tracer.TraceError("addrecord", ex);
 			}
 			finally
 			{
-				Tracer.Exit("addsinglevalue");
+				Tracer.Exit("addrecord");
 			}
 		}
-
 		public bool ExistRecord(object anchor)
 		{
 			Tracer.Enter("existrecord");
@@ -80,7 +87,7 @@ namespace Granfeldt
 				{
 					cmd.Parameters.AddWithValue("@anchor", anchor);
 					Tracer.TraceInformation("run-query {0}", query);
-					cmd.ExecuteNonQuery();
+					Tracer.TraceInformation("rows-affected {0:n0}", cmd.ExecuteNonQuery());
 				}
 			}
 			catch (Exception ex)
@@ -119,7 +126,7 @@ namespace Granfeldt
 				{
 					cmd.Parameters.AddWithValue("@anchor", anchor);
 					Tracer.TraceInformation("run-query {0}", query);
-					cmd.ExecuteNonQuery();
+					Tracer.TraceInformation("rows-affected {0:n0}", cmd.ExecuteNonQuery());
 				}
 			}
 			catch (Exception ex)
@@ -143,7 +150,7 @@ namespace Granfeldt
 					cmd.Parameters.AddWithValue("@anchor", anchor);
 					cmd.Parameters.AddWithValue("@value", value);
 					Tracer.TraceInformation("run-query {0}", query);
-					cmd.ExecuteNonQuery();
+					Tracer.TraceInformation("rows-affected {0:n0}", cmd.ExecuteNonQuery());
 				}
 			}
 			catch (Exception ex)
@@ -155,7 +162,6 @@ namespace Granfeldt
 				Tracer.Exit("addsinglevalue");
 			}
 		}
-
 		public void DeleteSingleValue(object anchor, string attributeName)
 		{
 			Tracer.Enter("deletesinglevalue");
@@ -168,7 +174,7 @@ namespace Granfeldt
 				{
 					cmd.Parameters.AddWithValue("@anchor", anchor);
 					Tracer.TraceInformation("run-query {0}", query);
-					cmd.ExecuteNonQuery();
+					Tracer.TraceInformation("rows-affected {0:n0}", cmd.ExecuteNonQuery());
 				}
 			}
 			catch (Exception ex)
@@ -192,7 +198,7 @@ namespace Granfeldt
 					cmd.Parameters.AddWithValue("@anchor", anchor);
 					cmd.Parameters.AddWithValue("@value", value);
 					Tracer.TraceInformation("run-query {0}", query);
-					cmd.ExecuteNonQuery();
+					Tracer.TraceInformation("rows-affected {0:n0}", cmd.ExecuteNonQuery());
 				}
 			}
 			catch (Exception ex)
@@ -223,7 +229,7 @@ namespace Granfeldt
 					cmd.Parameters.AddWithValue("@anchor", anchor);
 					cmd.Parameters.AddWithValue("@value", value);
 					Tracer.TraceInformation("run-query {0}", query);
-					cmd.ExecuteNonQuery();
+					Tracer.TraceInformation("rows-affected {0:n0}", cmd.ExecuteNonQuery());
 				}
 			}
 			catch (Exception ex)
@@ -235,7 +241,6 @@ namespace Granfeldt
 				Tracer.Exit("deletemultivalue");
 			}
 		}
-
 		public void RemoveAllMultiValues(object anchor, string attributeName, bool softDelete)
 		{
 			Tracer.Enter("removeallmultivalues");
@@ -254,7 +259,7 @@ namespace Granfeldt
 				{
 					cmd.Parameters.AddWithValue("@anchor", anchor);
 					Tracer.TraceInformation("run-query {0}", query);
-					cmd.ExecuteNonQuery();
+					Tracer.TraceInformation("rows-affected {0:n0}", cmd.ExecuteNonQuery());
 				}
 			}
 			catch (Exception ex)

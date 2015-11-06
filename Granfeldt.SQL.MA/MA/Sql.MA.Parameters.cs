@@ -76,6 +76,18 @@ namespace Granfeldt
 						configParametersDefinitions.Add(ConfigParameterDefinition.CreateTextParameter(Configuration.Parameters.SchemaConfiguration, DefaultSchemaXml));
 						break;
 					case ConfigParameterPage.Global:
+						configParametersDefinitions.Add(ConfigParameterDefinition.CreateLabelParameter("Optionally, you can specify the names of Stored Procedures to run before and after imports and exports. If a parameter is left blank, no action is taken for that step."));
+						configParametersDefinitions.Add(ConfigParameterDefinition.CreateDividerParameter());
+						configParametersDefinitions.Add(ConfigParameterDefinition.CreateLabelParameter("Import Stored Procedures"));
+						configParametersDefinitions.Add(ConfigParameterDefinition.CreateStringParameter(Configuration.Parameters.ImportCommandBefore, Configuration.ImportCommandBefore));
+						configParametersDefinitions.Add(ConfigParameterDefinition.CreateStringParameter(Configuration.Parameters.ImportCommandAfter, Configuration.ImportCommandAfter));
+						configParametersDefinitions.Add(ConfigParameterDefinition.CreateDividerParameter());
+						configParametersDefinitions.Add(ConfigParameterDefinition.CreateLabelParameter("Export Stored Procedures"));
+						configParametersDefinitions.Add(ConfigParameterDefinition.CreateStringParameter(Configuration.Parameters.ExportCommandBefore, Configuration.ExportCommandBefore));
+						configParametersDefinitions.Add(ConfigParameterDefinition.CreateStringParameter(Configuration.Parameters.ExportCommandAfter, Configuration.ExportCommandAfter));
+						configParametersDefinitions.Add(ConfigParameterDefinition.CreateStringParameter(Configuration.Parameters.ExportObjectCommandBefore, Configuration.ExportObjectCommandBefore));
+						configParametersDefinitions.Add(ConfigParameterDefinition.CreateStringParameter(Configuration.Parameters.ExportObjectCommandAfter, Configuration.ExportObjectCommandAfter));
+
 						break;
 					case ConfigParameterPage.Partition:
 						break;
@@ -105,30 +117,10 @@ namespace Granfeldt
 				}
 				if (page == ConfigParameterPage.Connectivity)
 				{
-					//string schemaScriptFilename = Path.GetFullPath(configParameters[Constants.Parameters.SchemaScript].Value);
-					//if (!File.Exists(schemaScriptFilename))
-					//{
-					//	return new ParameterValidationResult(ParameterValidationResultCode.Failure, string.Format("Can not find or access Schema script '{0}'. Please make sure that the FIM Synchronization Service service account can read and access this file.", schemaScriptFilename), Constants.Parameters.SchemaScript);
-					//}
 					return new ParameterValidationResult(ParameterValidationResultCode.Success, "", "");
 				}
 				if (page == ConfigParameterPage.Global)
 				{
-					//string importScriptFilename = Path.GetFullPath(configParameters[Constants.Parameters.ImportScript].Value);
-					//if (!File.Exists(importScriptFilename))
-					//{
-					//	return new ParameterValidationResult(ParameterValidationResultCode.Failure, string.Format("Can not find or access Import script '{0}'. Please make sure that the FIM Synchronization Service service account can read and access this file.", importScriptFilename), Constants.Parameters.ImportScript);
-					//}
-					//string exportScriptFilename = Path.GetFullPath(configParameters[Constants.Parameters.ExportScript].Value);
-					//if (!File.Exists(exportScriptFilename))
-					//{
-					//	return new ParameterValidationResult(ParameterValidationResultCode.Failure, string.Format("Can not find or access Export script '{0}'. Please make sure that the FIM Synchronization Service service account can read and access this file.", exportScriptFilename), Constants.Parameters.ExportScript);
-					//}
-					//string passwordManagementScriptFilename = Path.GetFullPath(configParameters[Constants.Parameters.PasswordManagementScript].Value);
-					//if (!File.Exists(passwordManagementScriptFilename))
-					//{
-					//	return new ParameterValidationResult(ParameterValidationResultCode.Failure, string.Format("Can not find or access Password Management script '{0}'. Please make sure that the FIM Synchronization Service service account can read and access this file.", passwordManagementScriptFilename), Constants.Parameters.PasswordManagementScript);
-					//}
 					return new ParameterValidationResult(ParameterValidationResultCode.Success, "", "");
 				}
 				if (page == ConfigParameterPage.Partition)
@@ -156,8 +148,6 @@ namespace Granfeldt
 			Tracer.Enter("initializeconfigparameters");
 			try
 			{
-				//Configuration.Schema = DefaultSchemaXml.XmlDeserializeFromString<SchemaConfiguration>();
-
 				if (configParameters != null)
 				{
 					foreach (ConfigParameter cp in configParameters)
@@ -181,6 +171,13 @@ namespace Granfeldt
 						if (cp.Name.Equals(Configuration.Parameters.ColumnDelta)) Configuration.DeltaColumn = configParameters[cp.Name].Value;
 						if (cp.Name.Equals(Configuration.Parameters.ColumnIsDeleted)) Configuration.DeletedColumn = configParameters[cp.Name].Value;
 						if (cp.Name.Equals(Configuration.Parameters.ColumnDN)) Configuration.DNColumn = configParameters[cp.Name].Value;
+
+						if (cp.Name.Equals(Configuration.Parameters.ImportCommandBefore)) Configuration.ImportCommandBefore= configParameters[cp.Name].Value;
+						if (cp.Name.Equals(Configuration.Parameters.ImportCommandAfter)) Configuration.ImportCommandAfter = configParameters[cp.Name].Value;
+						if (cp.Name.Equals(Configuration.Parameters.ExportCommandBefore)) Configuration.ExportCommandBefore = configParameters[cp.Name].Value;
+						if (cp.Name.Equals(Configuration.Parameters.ExportCommandAfter)) Configuration.ExportCommandAfter = configParameters[cp.Name].Value;
+						if (cp.Name.Equals(Configuration.Parameters.ExportObjectCommandBefore)) Configuration.ExportObjectCommandBefore = configParameters[cp.Name].Value;
+						if (cp.Name.Equals(Configuration.Parameters.ExportObjectCommandAfter)) Configuration.ExportObjectCommandAfter = configParameters[cp.Name].Value;
 
 						if (cp.Name.Equals(Configuration.Parameters.TypeOfObjectClass))
 						{
