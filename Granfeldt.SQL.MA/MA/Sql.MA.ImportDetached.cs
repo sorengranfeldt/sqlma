@@ -263,7 +263,10 @@ namespace Granfeldt
 
 				if (Configuration.RunBeforeImport)
 				{
-					methods.RunStoredProcedure(Configuration.ImportCommandBefore);
+					List<SqlParameter> parameters = new List<SqlParameter>();
+					parameters.Add(new SqlParameter("importtype", ImportType.ToString()));
+					parameters.Add(new SqlParameter("customdata", CustomData));
+					methods.RunStoredProcedure(Configuration.ImportCommandBefore, parameters);
 				}
 			}
 			catch (Exception ex)
@@ -357,7 +360,10 @@ namespace Granfeldt
 			{
 				if (Configuration.RunAfterImport)
 				{
-					methods.RunStoredProcedure(Configuration.ImportCommandAfter);
+					List<SqlParameter> parameters = new List<SqlParameter>();
+					parameters.Add(new SqlParameter("importtype", ImportType.ToString()));
+					parameters.Add(new SqlParameter("customdata", CustomData));
+					methods.RunStoredProcedure(Configuration.ImportCommandAfter, parameters);
 				}
 				methods.CloseConnection();
 				if (importAnchors != null)

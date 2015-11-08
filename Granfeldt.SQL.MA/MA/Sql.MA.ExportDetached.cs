@@ -68,7 +68,9 @@ namespace Granfeldt
 
 				if (Configuration.RunBeforeExport)
 				{
-					methods.RunStoredProcedure(Configuration.ExportCommandBefore);
+					List<SqlParameter> parameters = new List<SqlParameter>();
+					parameters.Add(new SqlParameter("exporttype", ExportType.ToString()));
+					methods.RunStoredProcedure(Configuration.ExportCommandBefore, parameters);
 				}
 			}
 			catch (Exception ex)
@@ -126,7 +128,7 @@ namespace Granfeldt
 								throw new InvalidOperationException("cannot-delete-without-anchor");
 							}
 
-                            Tracer.TraceInformation("deleting-record type: {1}, anchor: {0}", objectClass, anchor);
+							Tracer.TraceInformation("deleting-record type: {1}, anchor: {0}", objectClass, anchor);
 							methods.DeleteRecord(anchor, Configuration.HasMultivalueTable, handleSoftDeletion);
 							results.CSEntryChangeResults.Add(CSEntryChangeResult.Create(exportChange.Identifier, attrchanges, MAExportError.Success));
 							continue;
@@ -148,10 +150,21 @@ namespace Granfeldt
 							attrchanges.Add(AttributeChange.CreateAttributeAdd(anchor, newAnchor));
 						}
 
+						//foreach (AttributeChange ac in exportChange.AttributeChanges)
+						//{
+						//	Tracer.TraceInformation("attribute-change {0}, {1}", ac.Name, ac.ModificationType);
+						//}
+						//foreach (string attributeChange in exportChange.ChangedAttributeNames)
+						//{
+						//	Tracer.TraceInformation("changed-attribute {0}", attributeChange);
+						//}
+
 						// updating attributes is common for add and update
 						foreach (string attributeChange in exportChange.ChangedAttributeNames)
 						{
+							//Tracer.TraceInformation("attribute {0}", attributeChange);
 							AttributeChange ac = exportChange.AttributeChanges[attributeChange];
+							Tracer.TraceInformation("is-remove {0}", attributeChange == null);
 							Tracer.TraceInformation("attribute-change {0}, {1}", ac.Name, ac.ModificationType);
 							if (ac.IsMultiValued)
 							{
@@ -221,7 +234,9 @@ namespace Granfeldt
 			{
 				if (Configuration.RunAfterExport)
 				{
-					methods.RunStoredProcedure(Configuration.ExportCommandAfter);
+					List<SqlParameter> parameters = new List<SqlParameter>();
+					parameters.Add(new SqlParameter("exporttype", ExportType.ToString()));
+					methods.RunStoredProcedure(Configuration.ExportCommandAfter, parameters);
 				}
 				methods.CloseConnection();
 			}

@@ -59,12 +59,14 @@ namespace Granfeldt
 			Tracer.Enter("existrecord");
 			try
 			{
-				string query = string.Format("select [{0}] from [{1}] where {[0}] = @anchor;", Configuration.AnchorColumn, Configuration.TableNameSingle, Configuration.AnchorColumn);
+				string query = string.Format("select [{0}] from [{1}] where [{0}] = @anchor;", Configuration.AnchorColumn, Configuration.TableNameSingle, Configuration.AnchorColumn);
 				using (SqlCommand cmd = new SqlCommand(query, con))
 				{
 					cmd.Parameters.AddWithValue("@anchor", anchor);
 					Tracer.TraceInformation("run-query {0}", query);
-					return cmd.ExecuteNonQuery() == 1;
+					object affectedRecords = (object)cmd.ExecuteScalar();
+					Tracer.TraceInformation("exists {0}", affectedRecords != null);
+					return affectedRecords != null;
 				}
 			}
 			catch (Exception ex)
