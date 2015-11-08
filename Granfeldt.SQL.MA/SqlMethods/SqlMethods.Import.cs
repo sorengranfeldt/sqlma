@@ -14,48 +14,7 @@ namespace Granfeldt
 			Full,
 			Delta
 		}
-		//public void ReadObject(object anchor, out SqlDataAdapter singleValueAdapter, out SqlDataAdapter multiValueAdapter, out DataTable singleTable, out DataTable multiTable)
-		//{
-		//	Tracer.Enter("readobject");
-		//	singleValueAdapter = null;
-		//	multiValueAdapter = null;
-		//	singleTable = null;
-		//	multiTable = null;
-		//	try
-		//	{
-		//		string query = string.Format("select * from [{0}] where [{1}] = @anchor", Configuration.TableNameSingle, Configuration.AnchorColumn);
-		//		using (singleValueAdapter = new SqlDataAdapter(query, con))
-		//		{
-		//			singleTable = new DataTable();
-		//			singleValueAdapter.SelectCommand.Parameters.AddWithValue("@anchor", anchor);
-		//			Tracer.TraceInformation("run-query '{0}'", query);
-		//			singleValueAdapter.FillSchema(singleTable, SchemaType.Source);
-		//			singleValueAdapter.Fill(singleTable);
-		//		}
-		//		if (Configuration.HasMultivalueTable)
-		//		{
-		//			multiTable = new DataTable();
-		//			query = string.Format("select * from [{0}] where [{1}] = @anchor", Configuration.TableNameMulti, Configuration.BackReferenceColumn, anchor);
-		//			using (multiValueAdapter = new SqlDataAdapter(query, con))
-		//			{
-		//				multiValueAdapter.SelectCommand.Parameters.AddWithValue("@anchor", anchor);
-		//				Tracer.TraceInformation("run-query '{0}'", query);
-		//				multiValueAdapter.FillSchema(multiTable, SchemaType.Source);
-		//				multiValueAdapter.Fill(multiTable);
-		//			}
-		//		}
-		//	}
-		//	catch (Exception ex)
-		//	{
-		//		Tracer.TraceError("readobject {0}", ex.Message);
-		//		throw;
-		//	}
-		//	finally
-		//	{
-		//		Tracer.Exit("readobject");
-		//	}
-		//}
-
+	
 		public DataSet ReadObjects(List<object> anchors)
 		{
 			Tracer.Enter("readobjects");
@@ -98,8 +57,6 @@ namespace Granfeldt
 							ds.Load(dr, LoadOption.OverwriteChanges, single);
 						}
 					}
-					//singleValueAdapter.FillSchema(ds, SchemaType.Source);
-					//singleValueAdapter.Fill(ds);
 				}
 			}
 			catch (Exception ex)

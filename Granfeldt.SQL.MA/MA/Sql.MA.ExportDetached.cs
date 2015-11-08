@@ -38,7 +38,7 @@ namespace Granfeldt
 
 		string CSValueAsString(object Value, AttributeType DataType)
 		{
-			Tracer.TraceInformation("CSValueAsSting {0}, {1}", Value == null ? "(null)" : Value.GetType().ToString(), DataType);
+			Tracer.TraceInformation("CSValueAsString {0}, {1}", Value == null ? "(null)" : Value.GetType().ToString(), DataType);
 			switch (DataType)
 			{
 				case AttributeType.Binary:
@@ -150,21 +150,10 @@ namespace Granfeldt
 							attrchanges.Add(AttributeChange.CreateAttributeAdd(anchor, newAnchor));
 						}
 
-						//foreach (AttributeChange ac in exportChange.AttributeChanges)
-						//{
-						//	Tracer.TraceInformation("attribute-change {0}, {1}", ac.Name, ac.ModificationType);
-						//}
-						//foreach (string attributeChange in exportChange.ChangedAttributeNames)
-						//{
-						//	Tracer.TraceInformation("changed-attribute {0}", attributeChange);
-						//}
-
 						// updating attributes is common for add and update
 						foreach (string attributeChange in exportChange.ChangedAttributeNames)
 						{
-							//Tracer.TraceInformation("attribute {0}", attributeChange);
 							AttributeChange ac = exportChange.AttributeChanges[attributeChange];
-							Tracer.TraceInformation("is-remove {0}", attributeChange == null);
 							Tracer.TraceInformation("attribute-change {0}, {1}", ac.Name, ac.ModificationType);
 							if (ac.IsMultiValued)
 							{
