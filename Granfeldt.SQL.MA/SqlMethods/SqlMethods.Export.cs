@@ -5,6 +5,9 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 
+//	august 8, 2016 | soren granfeldt
+//		-changed string.Concat element order to fix buggy select scope_identity
+
 namespace Granfeldt
 {
 	public partial class SqlMethods : IDisposable
@@ -32,7 +35,7 @@ namespace Granfeldt
 						query = string.Format("insert into [{0}] ([{1}]) values (@anchor)", Configuration.TableNameSingle, Configuration.AnchorColumn);
 					}
 				}
-				query = string.Concat("; select scope_identity();", query);
+				query = string.Concat(query, "; select scope_identity();");
 				using (SqlCommand cmd = new SqlCommand(query, con))
 				{
 					cmd.Parameters.AddWithValue("@anchor", anchor);
@@ -41,7 +44,12 @@ namespace Granfeldt
 					newId = (object)cmd.ExecuteScalar();
 					if (newId == null)
 					{
+						Tracer.TraceInformation("no-new-anchor-returned (scope_identity)");
 						newId = anchor;
+					}
+					else
+					{
+						Tracer.TraceInformation("scope_identity-returned {0}", newId);
 					}
 				}
 			}
