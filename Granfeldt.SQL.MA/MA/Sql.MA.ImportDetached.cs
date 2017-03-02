@@ -1,4 +1,7 @@
-﻿using System;
+﻿// march 2, 2017, soren granfeldt
+//	-added disposable of dataset and lists after import
+
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -208,6 +211,8 @@ namespace Granfeldt
 										{
 											csentry.AttributeChanges.Add(AttributeChange.CreateAttributeAdd(attr.Name, mvs));
 										}
+										mvs.Clear();
+										mvs = null;
 									}
 								}
 							}
@@ -267,6 +272,8 @@ namespace Granfeldt
 					parameters.Add(new SqlParameter("importtype", ImportType.ToString()));
 					parameters.Add(new SqlParameter("customdata", CustomData));
 					methods.RunStoredProcedure(Configuration.ImportCommandBefore, parameters);
+					parameters.Clear();
+					parameters = null;
 				}
 			}
 			catch (Exception ex)
@@ -319,6 +326,11 @@ namespace Granfeldt
 					DataSet records;
 					records = methods.ReadObjects(sqlbatch);
 					importCsEntryQueue.AddRange(DataSetToCsEntryChanges(records));
+					records.Clear();
+					records.Dispose();
+
+					sqlbatch.Clear();
+					sqlbatch = null;
 				}
 
 				// return this batch
@@ -364,6 +376,8 @@ namespace Granfeldt
 					parameters.Add(new SqlParameter("importtype", ImportType.ToString()));
 					parameters.Add(new SqlParameter("customdata", CustomData));
 					methods.RunStoredProcedure(Configuration.ImportCommandAfter, parameters);
+					parameters.Clear();
+					parameters = null;
 				}
 				methods.CloseConnection();
 				if (importAnchors != null)
@@ -371,6 +385,7 @@ namespace Granfeldt
 					importAnchors.Clear();
 					importAnchors = null;
 				}
+				GC.Collect();
 			}
 			catch (Exception ex)
 			{
