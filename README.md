@@ -10,7 +10,7 @@ This MA have a lot of features that are needed for a modern FIM2010 or MIM2016 s
 
 The schema is very flexible and is generated based on the database tables definitions. A refresh of the schema for this management agent rediscovers the schema and you can override the structure in different manners using a configurable XML data.
 
-To learn more, please see [https://github.com/sorengranfeldt/sqlma/wiki](Wiki).
+To learn more, please see Wiki.
 
 Enjoy,
 Søren Granfeldt
