@@ -1,4 +1,7 @@
-﻿using System;
+﻿// december 3, 2017 :: søren granfeldt
+//  - fixed issue with validation value in username parameter
+
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -54,8 +57,8 @@ namespace Granfeldt
 						configParametersDefinitions.Add(ConfigParameterDefinition.CreateTextParameter(Configuration.Parameters.ConnectionString, Configuration.ConnectionString));
 						configParametersDefinitions.Add(ConfigParameterDefinition.CreateDividerParameter());
 						configParametersDefinitions.Add(ConfigParameterDefinition.CreateLabelParameter("Authentication (optional): These credentials are replace in the connection string."));
-						configParametersDefinitions.Add(ConfigParameterDefinition.CreateStringParameter(Configuration.Parameters.Username, Configuration.UserName));
-						configParametersDefinitions.Add(ConfigParameterDefinition.CreateEncryptedStringParameter(Configuration.Parameters.Password, ""));
+						configParametersDefinitions.Add(ConfigParameterDefinition.CreateStringParameter(Configuration.Parameters.Username, "", Configuration.UserName));
+						configParametersDefinitions.Add(ConfigParameterDefinition.CreateEncryptedStringParameter(Configuration.Parameters.Password, "", ""));
 
 						configParametersDefinitions.Add(ConfigParameterDefinition.CreateStringParameter(Configuration.Parameters.TableNameSingleValue, "", Configuration.TableNameSingle));
 						configParametersDefinitions.Add(ConfigParameterDefinition.CreateStringParameter(Configuration.Parameters.TableNameMultiValue, "", ""));
