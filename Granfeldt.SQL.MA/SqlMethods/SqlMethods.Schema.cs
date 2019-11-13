@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Data;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.MetadirectoryServices;
+﻿// november 13, 2019 | soren granfeldt
+//  - removed and sorted usings
+//  - added extra debug information
 
 namespace Granfeldt
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data.SqlClient;
 
-	public partial class SqlMethods : IDisposable
+    public partial class SqlMethods : IDisposable
 	{
 		// schema
 		public IEnumerable<string> GetObjectClasses()
@@ -50,6 +47,7 @@ namespace Granfeldt
 					{
 						for (int n = 0; n < reader.FieldCount; n++)
 						{
+                            Tracer.TraceInformation("return-column: name: {0}, type: {1}", reader.GetName(n), reader.GetDataTypeName(n));
 							yield return new AttributeDefinition(reader.GetName(n), reader.GetDataTypeName(n));
 						}
 					}

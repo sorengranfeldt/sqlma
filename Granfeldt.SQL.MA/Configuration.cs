@@ -42,7 +42,7 @@ namespace Granfeldt
 	}
 	public static class Configuration
 	{
-		public static string ConnectionString = "data source=192.168.0.31;initial catalog=test;persist security info=true;user id={username};password={password};multipleactiveresultsets=true";
+		public static string ConnectionString = "data source=192.168.0.225;initial catalog=test;persist security info=true;user id={username};password={password};multipleactiveresultsets=true";
 		public static string UserName = "sa";
 		public static string Password = "";
 		public static string Domain = "";
@@ -50,11 +50,11 @@ namespace Granfeldt
 		public static string TableNameSingle = "object";
 		public static string TableNameMulti = "objectmv";
 
-		public static string AnchorColumn = "_id";
+        public static string AnchorColumn = "_id";
 		public static string ObjectClass = "_objectclass";
 		public static string DeletedColumn = "_isdeleted";
-		public static string DeltaColumn = "_rowversion";
-		public static string DNColumn = "_id";
+        public static string DeltaColumn = "_rowversion";
+        public static string DNColumn = "_id";
 		public static string BackReferenceColumn = "_refid";
 
 		public static string ImportCommandBefore = "";
