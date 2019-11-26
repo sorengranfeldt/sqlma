@@ -63,8 +63,9 @@ namespace Granfeldt
 		public static string ExportCommandAfter = "";
 		public static string ExportObjectCommandBefore = "";
 		public static string ExportObjectCommandAfter = "";
+        public static string DateFormat = "yyyy-MM-ddTHH:mm:ss.fff";
 
-		public static ObjectClassType ObjectClassType = ObjectClassType.Column;
+        public static ObjectClassType ObjectClassType = ObjectClassType.Column;
 		public static DeltaColumnType DeltaColumnType = DeltaColumnType.Rowversion;
 
 		public static SchemaConfiguration Schema = new SchemaConfiguration();
@@ -161,7 +162,9 @@ namespace Granfeldt
 			public const string ExportCommandAfter = "Run after export";
 			public const string ExportObjectCommandBefore = "Run before export object";
 			public const string ExportObjectCommandAfter = "Run after export object";
-		}
+
+            public const string DateFormat = "Date format";
+        }
 		public static IEnumerable<string> ReservedColumnNames
 		{
 			get
@@ -181,12 +184,6 @@ namespace Granfeldt
 				yield return "export_password";
 			}
 		}
-		public static string SortableDateFormat
-		{
-			get
-			{
-				return "yyyy-MM-dd HH:mm:ss.fff";
-			}
-		}
+		
 	}
 }

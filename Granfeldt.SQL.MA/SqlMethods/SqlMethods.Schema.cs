@@ -16,7 +16,7 @@ namespace Granfeldt
 			Tracer.Enter("getobjectclasses");
 			try
 			{
-				string query = string.Format("select distinct {0} from [{1}]", Configuration.ObjectClass, Configuration.TableNameSingle);
+				string query = string.Format("select distinct {0} from {1}", Configuration.ObjectClass, Configuration.TableNameSingle);
 				Tracer.TraceInformation("run-query '{0}'", query);
 				SqlCommand command = new SqlCommand(query, con);
 				using (SqlDataReader reader = command.ExecuteReader())
@@ -38,7 +38,7 @@ namespace Granfeldt
 			Tracer.Enter("getschema");
 			try
 			{
-				string query = string.Format("select top 1 * from [{0}]", TableName);
+				string query = string.Format("select top 1 * from {0}", TableName);
 				Tracer.TraceInformation("run-query '{0}'", query);
 				SqlCommand command = new SqlCommand(query, con);
 				using (SqlDataReader reader = command.ExecuteReader())

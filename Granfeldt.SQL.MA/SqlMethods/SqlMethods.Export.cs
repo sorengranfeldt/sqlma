@@ -21,15 +21,15 @@ namespace Granfeldt
 				string query;
 				if (anchor == null)
 				{
-					query = string.Format("insert into [{0}] ([{1}]) values (@objectclass)", Configuration.TableNameSingle, Configuration.ObjectClass);
+					query = string.Format("insert into {0} ([{1}]) values (@objectclass)", Configuration.TableNameSingle, Configuration.ObjectClass);
 					if (Configuration.ObjectClassType == ObjectClassType.Fixed)
 					{
-						query = string.Format("insert into [{0}] default values", Configuration.TableNameSingle);
+						query = string.Format("insert into {0} default values", Configuration.TableNameSingle);
 					}
 				}
 				else
 				{
-					query = string.Format("insert into [{0}] ([{1}], [{2}]) values (@anchor, @objectclass)", Configuration.TableNameSingle, Configuration.AnchorColumn, Configuration.ObjectClass);
+					query = string.Format("insert into {0} ([{1}], [{2}]) values (@anchor, @objectclass)", Configuration.TableNameSingle, Configuration.AnchorColumn, Configuration.ObjectClass);
 					if (Configuration.ObjectClassType == ObjectClassType.Fixed)
 					{
 						query = string.Format("insert into [{0}] ([{1}]) values (@anchor)", Configuration.TableNameSingle, Configuration.AnchorColumn);
@@ -67,7 +67,7 @@ namespace Granfeldt
 			Tracer.Enter("existrecord");
 			try
 			{
-				string query = string.Format("select [{0}] from [{1}] where [{0}] = @anchor;", Configuration.AnchorColumn, Configuration.TableNameSingle, Configuration.AnchorColumn);
+				string query = string.Format("select {0} from {1} where [{0}] = @anchor;", Configuration.AnchorColumn, Configuration.TableNameSingle, Configuration.AnchorColumn);
 				using (SqlCommand cmd = new SqlCommand(query, con))
 				{
 					cmd.Parameters.AddWithValue("@anchor", anchor);
@@ -92,7 +92,7 @@ namespace Granfeldt
 			Tracer.Enter("undelete");
 			try
 			{
-				string query = string.Format("update [{0}] set [{1}] = null where [{2}] = @anchor", Configuration.TableNameSingle, Configuration.DeletedColumn, Configuration.AnchorColumn);
+				string query = string.Format("update {0} set [{1}] = null where [{2}] = @anchor", Configuration.TableNameSingle, Configuration.DeletedColumn, Configuration.AnchorColumn);
 				using (SqlCommand cmd = new SqlCommand(query, con))
 				{
 					cmd.Parameters.AddWithValue("@anchor", anchor);
@@ -118,18 +118,18 @@ namespace Granfeldt
 
 				if (softDelete)
 				{
-					query = string.Format("update [{0}] set [{1}] = 1 where [{2}] = @anchor;", Configuration.TableNameSingle, Configuration.DeletedColumn, Configuration.AnchorColumn);
+					query = string.Format("update {0} set [{1}] = 1 where [{2}] = @anchor;", Configuration.TableNameSingle, Configuration.DeletedColumn, Configuration.AnchorColumn);
 					if (deleteMultiValues)
 					{
-						string.Concat(query, string.Format("update [{0}] set [{1}] = 1 where [{2}] = @anchor;", Configuration.TableNameMulti, Configuration.DeletedColumn, Configuration.BackReferenceColumn));
+						string.Concat(query, string.Format("update {0} set [{1}] = 1 where [{2}] = @anchor;", Configuration.TableNameMulti, Configuration.DeletedColumn, Configuration.BackReferenceColumn));
 					}
 				}
 				else
 				{
-					query = string.Format("delete from [{0}] where [{1}] = @anchor;", Configuration.TableNameSingle, Configuration.AnchorColumn);
+					query = string.Format("delete from {0} where [{1}] = @anchor;", Configuration.TableNameSingle, Configuration.AnchorColumn);
 					if (deleteMultiValues)
 					{
-						string.Concat(query, string.Format("delete from [{0}] where [{1}] = @anchor;", Configuration.TableNameMulti, Configuration.BackReferenceColumn));
+						string.Concat(query, string.Format("delete from {0} where [{1}] = @anchor;", Configuration.TableNameMulti, Configuration.BackReferenceColumn));
 					}
 				}
 				using (SqlCommand cmd = new SqlCommand(query, con))
@@ -154,7 +154,7 @@ namespace Granfeldt
 			Tracer.Enter("addsinglevalue");
 			try
 			{
-				string query = string.Format("update [{0}] set [{1}] = @value where ([{2}] = @anchor)", Configuration.TableNameSingle, attributeName, Configuration.AnchorColumn);
+				string query = string.Format("update {0} set [{1}] = @value where ([{2}] = @anchor)", Configuration.TableNameSingle, attributeName, Configuration.AnchorColumn);
 				using (SqlCommand cmd = new SqlCommand(query, con))
 				{
 					cmd.Parameters.AddWithValue("@anchor", anchor);
@@ -178,7 +178,7 @@ namespace Granfeldt
 			try
 			{
 				string query = null;
-				query = string.Format("update [{0}] set [{1}] = null where ([{2}] = @anchor)", Configuration.TableNameSingle, attributeName, Configuration.AnchorColumn);
+				query = string.Format("update {0} set [{1}] = null where ([{2}] = @anchor)", Configuration.TableNameSingle, attributeName, Configuration.AnchorColumn);
 
 				using (SqlCommand cmd = new SqlCommand(query, con))
 				{
@@ -202,7 +202,7 @@ namespace Granfeldt
 			Tracer.Enter("addmultivalue");
 			try
 			{
-				string query = string.Format("insert into [{0}] ([{1}], [{2}]) values (@anchor, @value)", Configuration.TableNameMulti, Configuration.BackReferenceColumn, attributeName);
+				string query = string.Format("insert into {0} ([{1}], [{2}]) values (@anchor, @value)", Configuration.TableNameMulti, Configuration.BackReferenceColumn, attributeName);
 				using (SqlCommand cmd = new SqlCommand(query, con))
 				{
 					cmd.Parameters.AddWithValue("@anchor", anchor);
@@ -228,11 +228,11 @@ namespace Granfeldt
 				string query = null;
 				if (softDelete)
 				{
-					query = string.Format("update [{0}] set [{1}] = 1 where ([{2}] = @anchor and [{3}] = @value)", Configuration.TableNameMulti, Configuration.DeletedColumn, Configuration.BackReferenceColumn, attributeName);
+					query = string.Format("update {0} set [{1}] = 1 where ([{2}] = @anchor and [{3}] = @value)", Configuration.TableNameMulti, Configuration.DeletedColumn, Configuration.BackReferenceColumn, attributeName);
 				}
 				else
 				{
-					query = string.Format("delete from [{0}] where ([{1}] = @anchor and [{2}] = @value)", Configuration.TableNameMulti, Configuration.BackReferenceColumn, attributeName);
+					query = string.Format("delete from {0} where ([{1}] = @anchor and [{2}] = @value)", Configuration.TableNameMulti, Configuration.BackReferenceColumn, attributeName);
 				}
 				using (SqlCommand cmd = new SqlCommand(query, con))
 				{
@@ -259,11 +259,11 @@ namespace Granfeldt
 				string query = null;
 				if (softDelete)
 				{
-					query = string.Format("update [{0}] set [{1}] = 1 where ([{2}] = @anchor and [{3}] is not null and [{1}] <> 1)", Configuration.TableNameMulti, Configuration.DeletedColumn, Configuration.BackReferenceColumn, attributeName);
+					query = string.Format("update {0} set [{1}] = 1 where ([{2}] = @anchor and [{3}] is not null and [{1}] <> 1)", Configuration.TableNameMulti, Configuration.DeletedColumn, Configuration.BackReferenceColumn, attributeName);
 				}
 				else
 				{
-					query = string.Format("delete from [{0}] where ([{1}] = @anchor and [{2}] is not null)", Configuration.TableNameMulti, Configuration.BackReferenceColumn, attributeName);
+					query = string.Format("delete from {0} where ([{1}] = @anchor and [{2}] is not null)", Configuration.TableNameMulti, Configuration.BackReferenceColumn, attributeName);
 				}
 				using (SqlCommand cmd = new SqlCommand(query, con))
 				{

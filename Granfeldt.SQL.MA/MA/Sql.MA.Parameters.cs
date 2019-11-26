@@ -56,7 +56,7 @@ namespace Granfeldt
                     case ConfigParameterPage.Connectivity:
                         configParametersDefinitions.Add(ConfigParameterDefinition.CreateTextParameter(Configuration.Parameters.ConnectionString, Configuration.ConnectionString));
                         configParametersDefinitions.Add(ConfigParameterDefinition.CreateDividerParameter());
-                        configParametersDefinitions.Add(ConfigParameterDefinition.CreateLabelParameter("Authentication (optional): These credentials are replace in the connection string."));
+                        configParametersDefinitions.Add(ConfigParameterDefinition.CreateLabelParameter("Authentication (optional): These credentials are replaced in the connection string."));
                         configParametersDefinitions.Add(ConfigParameterDefinition.CreateStringParameter(Configuration.Parameters.Username, "", Configuration.UserName));
                         configParametersDefinitions.Add(ConfigParameterDefinition.CreateEncryptedStringParameter(Configuration.Parameters.Password, "", ""));
 
@@ -73,6 +73,9 @@ namespace Granfeldt
 
                         configParametersDefinitions.Add(ConfigParameterDefinition.CreateDropDownParameter(Configuration.Parameters.TypeOfDelta, "Rowversion,DateTime", false, DeltaColumnType.Rowversion.ToString()));
                         configParametersDefinitions.Add(ConfigParameterDefinition.CreateStringParameter(Configuration.Parameters.ColumnDelta, "", ""));
+
+                        configParametersDefinitions.Add(ConfigParameterDefinition.CreateDividerParameter());
+                        configParametersDefinitions.Add(ConfigParameterDefinition.CreateStringParameter(Configuration.Parameters.DateFormat, "", Configuration.DateFormat));
 
                         configParametersDefinitions.Add(ConfigParameterDefinition.CreateDividerParameter());
                         configParametersDefinitions.Add(ConfigParameterDefinition.CreateLabelParameter("Below you can specify SQL schema related XML configuration."));
@@ -181,6 +184,8 @@ namespace Granfeldt
                         if (cp.Name.Equals(Configuration.Parameters.ExportCommandAfter)) Configuration.ExportCommandAfter = configParameters[cp.Name].Value;
                         if (cp.Name.Equals(Configuration.Parameters.ExportObjectCommandBefore)) Configuration.ExportObjectCommandBefore = configParameters[cp.Name].Value;
                         if (cp.Name.Equals(Configuration.Parameters.ExportObjectCommandAfter)) Configuration.ExportObjectCommandAfter = configParameters[cp.Name].Value;
+
+                        if (cp.Name.Equals(Configuration.Parameters.DateFormat)) Configuration.DateFormat = configParameters[cp.Name].Value;
 
                         if (cp.Name.Equals(Configuration.Parameters.TypeOfObjectClass))
                         {

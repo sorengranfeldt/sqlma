@@ -35,10 +35,10 @@ namespace Granfeldt
 				}
 
 				StringBuilder query = new StringBuilder();
-				query.AppendFormat("select * from [{0}] where [{1}] in ({2});", Configuration.TableNameSingle, singleanchor, anchorList);
+				query.AppendFormat("select * from {0} where [{1}] in ({2});", Configuration.TableNameSingle, singleanchor, anchorList);
 				if (Configuration.HasMultivalueTable)
 				{
-					query.AppendFormat("select * from [{0}] where [{1}] in ({2});", Configuration.TableNameMulti, multivalueanchorref, anchorList);
+					query.AppendFormat("select * from {0} where [{1}] in ({2});", Configuration.TableNameMulti, multivalueanchorref, anchorList);
 					ds.Tables.Add(multi);
 				}
 				Tracer.TraceInformation("run-query '{0}'", query.ToString());
@@ -82,11 +82,11 @@ namespace Granfeldt
 				{
 					if (Configuration.HasDeletedColumn)
 					{
-						queries.Add(string.Format("select [{0}] from [{1}] where ([{2}] is null) or ([{2}] = 0)", Configuration.AnchorColumn, Configuration.TableNameSingle, Configuration.DeletedColumn));
+						queries.Add(string.Format("select {0} from {1} where ([{2}] is null) or ([{2}] = 0)", Configuration.AnchorColumn, Configuration.TableNameSingle, Configuration.DeletedColumn));
 					}
 					else
 					{
-						queries.Add(string.Format("select [{0}] from [{1}]", Configuration.AnchorColumn, Configuration.TableNameSingle));
+						queries.Add(string.Format("select {0} from {1}", Configuration.AnchorColumn, Configuration.TableNameSingle));
 					}
 				}
 				else
@@ -102,14 +102,14 @@ namespace Granfeldt
 						}
 						else
 						{
-							customData = string.IsNullOrEmpty(customData) ? DateTime.MinValue.ToString(Configuration.SortableDateFormat) : customData;
+							customData = string.IsNullOrEmpty(customData) ? DateTime.MinValue.ToString(Configuration.DateFormat) : customData;
 							deltaWaterMark = string.Concat("'", customData.TrimEnd('Z'), "'");
 						}
 					}
-					queries.Add(string.Format("select [{0}] from [{1}] where ([{2}] > {3})", Configuration.AnchorColumn, Configuration.TableNameSingle, Configuration.DeltaColumn, deltaWaterMark));
+					queries.Add(string.Format("select {0} from {1} where ([{2}] > {3})", Configuration.AnchorColumn, Configuration.TableNameSingle, Configuration.DeltaColumn, deltaWaterMark));
 					if (Configuration.HasMultivalueTable)
 					{
-						queries.Add(string.Format("select [{0}] from [{1}] where ([{2}] > {3})", Configuration.BackReferenceColumn, Configuration.TableNameMulti, Configuration.DeltaColumn, deltaWaterMark));
+						queries.Add(string.Format("select {0} from {1} where ([{2}] > {3})", Configuration.BackReferenceColumn, Configuration.TableNameMulti, Configuration.DeltaColumn, deltaWaterMark));
 					}
 				}
 

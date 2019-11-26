@@ -207,7 +207,7 @@
             <type>label</type>
             <validation>
             </validation>
-            <text>Authentication (optional): These credentials are replace in the connection string.</text>
+            <text>Authentication (optional): These credentials are replaced in the connection string.</text>
             <default-value>
             </default-value>
           </parameter>
@@ -215,7 +215,7 @@
             <name>Username</name>
             <use>connectivity</use>
             <type>string</type>
-            <validation>sa</validation>
+            <validation></validation>
             <text>
             </text>
             <default-value>
@@ -324,6 +324,17 @@
             </text>
             <default-value>Rowversion</default-value>
             <dropdown-extensible>0</dropdown-extensible>
+          </parameter>
+          <parameter>
+            <name>Date format</name>
+            <use>connectivity</use>
+            <type>string</type>
+            <validation>
+            </validation>
+            <text>
+            </text>
+            <default-value>
+            </default-value>
           </parameter>
           <parameter>
             <name>Delta column name</name>

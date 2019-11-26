@@ -96,7 +96,7 @@ namespace Granfeldt
                             DateTime dt;
                             if (DateTime.TryParse(value.ToString(), out dt))
                             {
-                                value = dt.ToString(Configuration.SortableDateFormat);
+                                value = dt.ToString(Configuration.DateFormat);
                                 return value;
                             }
                             else
@@ -138,8 +138,8 @@ namespace Granfeldt
                     DateTime newCustomData = ((DateTime)GetSafeValue(row, Configuration.DeltaColumn, AttributeType.String, true));
                     if (currentCustomData < newCustomData)
                     {
-                        Tracer.TraceInformation("change-customdata old: {0}, new: {1}", currentCustomData.ToString(Configuration.SortableDateFormat), newCustomData.ToString(Configuration.SortableDateFormat));
-                        CustomData = newCustomData.ToString(Configuration.SortableDateFormat);
+                        Tracer.TraceInformation("change-customdata old: {0}, new: {1}", currentCustomData.ToString(Configuration.DateFormat), newCustomData.ToString(Configuration.DateFormat));
+                        CustomData = newCustomData.ToString(Configuration.DateFormat);
                     }
                 }
             }

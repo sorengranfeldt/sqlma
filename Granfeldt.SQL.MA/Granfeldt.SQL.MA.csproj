@@ -66,6 +66,7 @@
     <Compile Include="Tracer.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Granfeldt.SQL.MA.2017.xml" />
     <Content Include="Granfeldt.SQL.MA.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
