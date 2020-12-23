@@ -43,6 +43,7 @@ namespace Granfeldt
 	public static class Configuration
 	{
 		public static string ConnectionString = "data source=192.168.0.225;initial catalog=test;persist security info=true;user id={username};password={password};multipleactiveresultsets=true";
+		public static string TypeOfAuthentication = Configuration.Parameters.AuthenticationTypeSQL;
 		public static string UserName = "sa";
 		public static string Password = "";
 		public static string Domain = "";
@@ -138,8 +139,14 @@ namespace Granfeldt
 		public static class Parameters
 		{
 			public const string ConnectionString = "Connection string";
+			public const string TypeOfAuthentication = "Authentication Type";
+
+			public const string AuthenticationTypeSQL = "SQL";
+			public const string AuthenticationTypeWindows = "Windows";
+
 			public const string Username = "Username";
 			public const string Password = "Password";
+			public const string Domain = "Domain";
 			public const string SchemaConfiguration = "Schema Configuration";
 
 			public const string TableNameSingleValue = "Tablename";

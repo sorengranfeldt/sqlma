@@ -11,24 +11,12 @@ namespace Granfeldt
 		const string EventLogName = "Application";
 
 		SqlMethods methods = new SqlMethods();
-		Schema _schema = null;
-		public Schema Schema
-		{
-			get
-			{
-				return _schema;
-			}
-			set
-			{
-				_schema = value;
-			}
-		}
 
-		public SQLManagementAgent()
+        public Schema Schema { get; set; } = null;
+
+        public SQLManagementAgent()
 		{
-			Tracer.IndentLevel = 0;
 			Tracer.Enter("initialize");
-			Tracer.Indent();
 			try
 			{
 				System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
@@ -61,7 +49,6 @@ namespace Granfeldt
 			}
 			finally
 			{
-				Tracer.Unindent();
 				Tracer.Exit("initialize");
 			}
 		}

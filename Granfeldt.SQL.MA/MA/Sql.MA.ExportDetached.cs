@@ -10,33 +10,10 @@ namespace Granfeldt
 {
 	public partial class SQLManagementAgent : IDisposable, IMAExtensible2GetCapabilities, IMAExtensible2GetSchema, IMAExtensible2GetParameters, IMAExtensible2CallImport, IMAExtensible2CallExport
 	{
-		OperationType _exportOperationType;
-		int _exportBatchSize = 100;
+        public int ExportBatchSize { get; set; } = 100;
+        public OperationType ExportType { get; set; }
 
-		public int ExportBatchSize
-		{
-			get
-			{
-				return _exportBatchSize;
-			}
-			set
-			{
-				_exportBatchSize = value;
-			}
-		}
-		public OperationType ExportType
-		{
-			get
-			{
-				return _exportOperationType;
-			}
-			set
-			{
-				_exportOperationType = value;
-			}
-		}
-
-		string CSValueAsString(object Value, AttributeType DataType)
+        string CSValueAsString(object Value, AttributeType DataType)
 		{
 			Tracer.TraceInformation("CSValueAsString {0}, {1}", Value == null ? "(null)" : Value.GetType().ToString(), DataType);
 			switch (DataType)
@@ -49,7 +26,7 @@ namespace Granfeldt
 		}
 		public void OpenExportConnectionDetached(KeyedCollection<string, ConfigParameter> configParameters, Schema types, OpenExportConnectionRunStep exportRunStep)
 		{
-			Tracer.Enter("openexportconnectiondetached");
+			Tracer.Enter(nameof(OpenExportConnectionDetached));
 			try
 			{
 				InitializeConfigParameters(configParameters);
@@ -75,18 +52,18 @@ namespace Granfeldt
 			}
 			catch (Exception ex)
 			{
-				Tracer.TraceError("openexportconnection", ex);
+				Tracer.TraceError(nameof(OpenExportConnectionDetached), ex);
 				throw new TerminateRunException(ex.Message);
 			}
 			finally
 			{
-				Tracer.Exit("exit-openexportconnection");
+				Tracer.Exit(nameof(OpenExportConnectionDetached));
 			}
 		}
 		//TODO: Remember to return identity from SQL if possible
 		public PutExportEntriesResults PutExportEntriesDetached(IList<CSEntryChange> csentries)
 		{
-			Tracer.Enter("putexportentriesdetached");
+			Tracer.Enter(nameof(PutExportEntriesDetached));
 			PutExportEntriesResults results = new PutExportEntriesResults();
 			try
 			{
@@ -199,7 +176,7 @@ namespace Granfeldt
 					}
 					catch (Exception exportEx)
 					{
-						Tracer.TraceError("putexportentriesdetached", exportEx);
+						Tracer.TraceError(nameof(PutExportEntriesDetached), exportEx);
 						results.CSEntryChangeResults.Add(CSEntryChangeResult.Create(exportChange.Identifier, attrchanges, MAExportError.ExportErrorCustomContinueRun, "export-exception", exportEx.Message));
 						throw;
 					}
@@ -207,18 +184,18 @@ namespace Granfeldt
 			}
 			catch (Exception ex)
 			{
-				Tracer.TraceError("putexportentriesdetached", ex);
+				Tracer.TraceError(nameof(PutExportEntriesDetached), ex);
 				throw;
 			}
 			finally
 			{
-				Tracer.Exit("putexportentriesdetached");
+				Tracer.Exit(nameof(PutExportEntriesDetached));
 			}
 			return results;
 		}
 		public void CloseExportConnectionDetached(CloseExportConnectionRunStep exportRunStep)
 		{
-			Tracer.Enter("closeexportconnectiondetached");
+			Tracer.Enter(nameof(CloseExportConnectionDetached));
 			try
 			{
 				if (Configuration.RunAfterExport)
@@ -231,12 +208,12 @@ namespace Granfeldt
 			}
 			catch (Exception ex)
 			{
-				Tracer.TraceError("closeexportconnectiondetached", ex);
+				Tracer.TraceError(nameof(CloseExportConnectionDetached), ex);
 				throw;
 			}
 			finally
 			{
-				Tracer.Exit("closeexportconnection");
+				Tracer.Exit(nameof(CloseExportConnectionDetached));
 			}
 		}
 	}

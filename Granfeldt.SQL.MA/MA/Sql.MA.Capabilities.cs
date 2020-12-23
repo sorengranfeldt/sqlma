@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.MetadirectoryServices;
+﻿using Microsoft.MetadirectoryServices;
+using System;
 
 namespace Granfeldt
 {
-	public partial class SQLManagementAgent : IDisposable, IMAExtensible2GetCapabilities, IMAExtensible2GetSchema, IMAExtensible2GetParameters, IMAExtensible2CallImport, IMAExtensible2CallExport
+    public partial class SQLManagementAgent : IDisposable, IMAExtensible2GetCapabilities, IMAExtensible2GetSchema, IMAExtensible2GetParameters, IMAExtensible2CallImport, IMAExtensible2CallExport
 	{
 		MACapabilities IMAExtensible2GetCapabilities.Capabilities
 		{
 			get
 			{
-				Tracer.Enter("getcapabilities");
+				Tracer.Enter(nameof(IMAExtensible2GetCapabilities.Capabilities));
 				MACapabilities cap = new MACapabilities();
 				cap.ExportPasswordInFirstPass = false;
 				cap.ConcurrentOperation = true;
@@ -25,7 +20,7 @@ namespace Granfeldt
 				cap.ObjectConfirmation = MAObjectConfirmation.Normal;
 				cap.ObjectRename = false;
 				cap.NoReferenceValuesInFirstExport = false;
-				Tracer.Exit("getcapabilities");
+				Tracer.Exit(nameof(IMAExtensible2GetCapabilities.Capabilities));
 				return cap;
 			}
 		}

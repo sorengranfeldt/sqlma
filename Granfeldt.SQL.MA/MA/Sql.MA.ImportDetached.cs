@@ -65,88 +65,104 @@ namespace Granfeldt
 
         object GetSafeValue(DataRow dataRow, string attributeName, AttributeType attributeType, bool DeltaDate = false)
         {
-            if (dataRow.IsNull(attributeName))
+            object value = null;
+            try
             {
-                return null;
-            }
-            object value;
-            switch (attributeType)
-            {
-                case AttributeType.Binary:
-                    value = dataRow.Field<object>(attributeName);
-                    if (value.GetType().Equals(typeof(System.Guid)))
-                    {
-                        value = ((Guid)value).ToByteArray();
-                    }
-                    return value;
-                case AttributeType.Reference: // reference is always string in FIM
-                    value = dataRow.Field<object>(attributeName);
-                    return value.ToString();
-                case AttributeType.String:
-                    if (DeltaDate)
-                    {
+                if (dataRow.IsNull(attributeName))
+                {
+                    return null;
+                }
+                switch (attributeType)
+                {
+                    case AttributeType.Binary:
+                        value = dataRow.Field<object>(attributeName);
+                        if (value.GetType().Equals(typeof(System.Guid)))
+                        {
+                            value = ((Guid)value).ToByteArray();
+                        }
+                        return value;
+                    case AttributeType.Reference: // reference is always string in FIM
+                        value = dataRow.Field<object>(attributeName);
+                        return value.ToString();
+                    case AttributeType.String:
+                        if (DeltaDate)
+                        {
+                            value = dataRow.Field<object>(attributeName);
+                            return value;
+                        }
+                        else
+                        {
+                            value = dataRow.Field<object>(attributeName);
+                            if (IsDateTimeType(value.GetType()))
+                            {
+                                DateTime dt;
+                                if (DateTime.TryParse(value.ToString(), out dt))
+                                {
+                                    value = dt.ToString(Configuration.DateFormat);
+                                    return value;
+                                }
+                                else
+                                {
+                                    Tracer.TraceWarning("unable-to-parse-value-to-date: value: {0}", value);
+                                }
+                            }
+                            return value.ToString();
+                        }
+                    default:
                         value = dataRow.Field<object>(attributeName);
                         return value;
-                    }
-                    else
-                    {
-                        value = dataRow.Field<object>(attributeName);
-                        if (IsDateTimeType(value.GetType()))
-                        {
-                            DateTime dt;
-                            if (DateTime.TryParse(value.ToString(), out dt))
-                            {
-                                value = dt.ToString(Configuration.DateFormat);
-                                return value;
-                            }
-                            else
-                            {
-                                Tracer.TraceWarning("unable-to-parse-value-to-date: value: {0}", value);
-                            }
-                        }
-                        return value.ToString();
-                    }
-                default:
-                    value = dataRow.Field<object>(attributeName);
-                    return value;
+                }
+            }
+            catch (Exception e)
+            {
+                Tracer.TraceError($"{nameof(GetSafeValue)}, attribute: {attributeName}, target-type: {attributeType}, value: {value}, error: {e.Message}");
+                throw;
             }
         }
         void SetCustomData(DataRow row)
         {
-            if (!Configuration.HasDeltaColumn)
+            object deltaValue = null;
+            try
             {
-                return;
-            }
-            else
-            {
-                object deltaValue = null;
-                if (Configuration.DeltaColumnType == DeltaColumnType.Rowversion)
+                if (!Configuration.HasDeltaColumn)
                 {
-                    ulong rowversionCustomData = string.IsNullOrEmpty(CustomData) ? 0 : ulong.Parse(CustomData);
-                    deltaValue = GetSafeValue(row, Configuration.DeltaColumn, AttributeType.Binary);
-                    ulong newRowversionCustomData = BitConverter.ToUInt64(((Byte[])deltaValue).Reverse().ToArray(), 0);
-                    if (rowversionCustomData < newRowversionCustomData)
-                    {
-                        Tracer.TraceInformation("change-customdata old: {0}, new: {1}", rowversionCustomData, newRowversionCustomData);
-                        CustomData = newRowversionCustomData.ToString();
-                    }
+                    return;
                 }
                 else
                 {
-                    //TODO: Documentation: Remember to write UTC for delta dates
-                    DateTime currentCustomData = string.IsNullOrEmpty(CustomData) ? DateTime.MinValue.ToUniversalTime() : DateTime.Parse(CustomData).ToUniversalTime();
-                    DateTime newCustomData = ((DateTime)GetSafeValue(row, Configuration.DeltaColumn, AttributeType.String, true));
-                    if (currentCustomData < newCustomData)
+                    if (Configuration.DeltaColumnType == DeltaColumnType.Rowversion)
                     {
-                        Tracer.TraceInformation("change-customdata old: {0}, new: {1}", currentCustomData.ToString(Configuration.DateFormat), newCustomData.ToString(Configuration.DateFormat));
-                        CustomData = newCustomData.ToString(Configuration.DateFormat);
+                        ulong rowversionCustomData = string.IsNullOrEmpty(CustomData) ? 0 : ulong.Parse(CustomData);
+                        deltaValue = GetSafeValue(row, Configuration.DeltaColumn, AttributeType.Binary);
+                        ulong newRowversionCustomData = BitConverter.ToUInt64(((Byte[])deltaValue).Reverse().ToArray(), 0);
+                        if (rowversionCustomData < newRowversionCustomData)
+                        {
+                            Tracer.TraceInformation("change-customdata old: {0}, new: {1}", rowversionCustomData, newRowversionCustomData);
+                            CustomData = newRowversionCustomData.ToString();
+                        }
+                    }
+                    else
+                    {
+                        //TODO: Documentation: Remember to write UTC for delta dates
+                        DateTime currentCustomData = string.IsNullOrEmpty(CustomData) ? DateTime.MinValue.ToUniversalTime() : DateTime.Parse(CustomData).ToUniversalTime();
+                        DateTime newCustomData = ((DateTime)GetSafeValue(row, Configuration.DeltaColumn, AttributeType.String, true));
+                        if (currentCustomData < newCustomData)
+                        {
+                            Tracer.TraceInformation("change-customdata old: {0}, new: {1}", currentCustomData.ToString(Configuration.DateFormat), newCustomData.ToString(Configuration.DateFormat));
+                            CustomData = newCustomData.ToString(Configuration.DateFormat);
+                        }
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                Tracer.TraceError($"{nameof(SetCustomData)}, custom-data: {CustomData}, delta-value: {deltaValue}, error: {e.Message}");
+                throw;
             }
         }
         IEnumerable<CSEntryChange> DataSetToCsEntryChanges(DataSet records)
         {
-            Tracer.Enter("datasettocsentrychanges");
+            Tracer.Enter(nameof(DataSetToCsEntryChanges));
             try
             {
                 string singleanchor = Configuration.AnchorColumn;
@@ -178,8 +194,7 @@ namespace Granfeldt
                             csentry.DN = Dn;
                             csentry.AnchorAttributes.Add(AnchorAttribute.Create(singleanchor, anchorValue));
 
-                            Tracer.TraceInformation("start-record id: {0}, objectclass: {1}, DN: {2}", anchorValue, objectClass, Dn);
-                            Tracer.Indent();
+                            Tracer.TraceInformation($"start-record id: {anchorValue}, objectclass: {objectClass}, DN: {Dn}");
 
                             SetCustomData(singleRow);
 
@@ -200,6 +215,7 @@ namespace Granfeldt
                                     {
                                         continue;
                                     }
+                                    Tracer.TraceInformation($"get-single-value {attr.Name}");
                                     object value = GetSafeValue(singleRow, attr.Name, attr.DataType);
                                     Tracer.TraceInformation("add-single-value name: {0}, value: {1}: '{2}'", attr.Name, attr.DataType, value);
                                     csentry.AttributeChanges.Add(AttributeChange.CreateAttributeAdd(attr.Name, value));
@@ -221,6 +237,7 @@ namespace Granfeldt
 
                                             if (!isDeleted)
                                             {
+                                                Tracer.TraceInformation($"get-multi-value {attr.Name}");
                                                 object value = GetSafeValue(row, attr.Name, attr.DataType);
                                                 Tracer.TraceInformation("add-multi-value name: {0}, value: {1}: '{2}'", attr.Name, attr.DataType, value);
                                                 mvs.Add(value);
@@ -245,8 +262,7 @@ namespace Granfeldt
                         }
                         finally
                         {
-                            Tracer.Unindent();
-                            Tracer.TraceInformation("end-record id: {0}, objectclass: {1}, DN: {2}", anchorValue, objectClass, Dn);
+                            Tracer.TraceInformation($"end-record id: {anchorValue}, objectclass: {objectClass}, DN: {Dn}");
                         }
                     }
                     catch (Exception iex)
@@ -264,7 +280,7 @@ namespace Granfeldt
 
         public OpenImportConnectionResults OpenImportConnectionDetached(KeyedCollection<string, ConfigParameter> configParameters, Schema types, OpenImportConnectionRunStep importRunStep)
         {
-            Tracer.Enter("openimportconnectiondetached");
+            Tracer.Enter(nameof(OpenImportConnectionDetached));
             OpenImportConnectionResults result = new OpenImportConnectionResults();
             try
             {
@@ -272,7 +288,7 @@ namespace Granfeldt
                 {
                     InitializeConfigParameters(configParameters);
                     ImportType = importRunStep.ImportType;
-                    CustomData = importRunStep.CustomData;
+                    CustomData = ImportType == OperationType.Delta ? importRunStep.CustomData : null;
                     PageSize = importRunStep.PageSize;
                 }
                 Tracer.TraceInformation("import-type {0}", ImportType);
@@ -297,19 +313,18 @@ namespace Granfeldt
             }
             catch (Exception ex)
             {
-                Tracer.TraceError("openimportconnectiondetached", ex);
+                Tracer.TraceError(nameof(OpenImportConnectionDetached), ex);
                 throw;
             }
             finally
             {
-                Tracer.Exit("openimportconnectiondetached");
+                Tracer.Exit(nameof(OpenImportConnectionDetached));
             }
             return result;
         }
         public GetImportEntriesResults GetImportEntriesDetached(GetImportEntriesRunStep importRunStep)
         {
-            Tracer.IndentLevel = 0;
-            Tracer.Enter("getimportentriesdetached");
+            Tracer.Enter(nameof(GetImportEntriesDetached));
             GetImportEntriesResults results = new GetImportEntriesResults();
             try
             {
@@ -375,17 +390,17 @@ namespace Granfeldt
             }
             catch (Exception ex)
             {
-                Tracer.TraceError("getimportentriesdetached", ex);
+                Tracer.TraceError(nameof(GetImportEntriesDetached), ex);
             }
             finally
             {
-                Tracer.Exit("getimportentriesdetached");
+                Tracer.Exit(nameof(GetImportEntriesDetached));
             }
             return results;
         }
         public CloseImportConnectionResults CloseImportConnectionDetached(CloseImportConnectionRunStep importRunStep)
         {
-            Tracer.Enter("closeimportconnectiondetached");
+            Tracer.Enter(nameof(CloseImportConnectionDetached));
             CloseImportConnectionResults result = new CloseImportConnectionResults();
             try
             {
@@ -408,12 +423,12 @@ namespace Granfeldt
             }
             catch (Exception ex)
             {
-                Tracer.TraceError("closeimportconnectiondetached", ex);
+                Tracer.TraceError(nameof(CloseImportConnectionDetached), ex);
                 throw;
             }
             finally
             {
-                Tracer.Exit("closeimportconnectiondetached");
+                Tracer.Exit(nameof(CloseImportConnectionDetached));
             }
             return result;
         }

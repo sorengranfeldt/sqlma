@@ -11,9 +11,9 @@
     <format-version>1</format-version>
     <internal-version>1</internal-version>
     <ma-companyname>Soren Granfeldt</ma-companyname>
-    <subtype>GenericSQL</subtype>
-    <ma-listname>Generic SQL Server</ma-listname>
-    <id>{78AAF56D-3EBE-4D98-995D-9FF744CD1DA5}</id>
+    <subtype>GenericSQL (Soren Granfeldt)</subtype>
+    <ma-listname>Generic SQL Server (Soren Granfeldt)</ma-listname>
+    <id>{872FAA15-2B88-4878-80C2-B9A87DD18A2D}</id>
     <category>Extensible2</category>
     <password-sync-allowed>0</password-sync-allowed>
     <schema>
@@ -73,7 +73,7 @@
             <dsml:name>othertelephone</dsml:name>
             <dsml:syntax>1.3.6.1.4.1.1466.115.121.1.15</dsml:syntax>
           </dsml:attribute-type>
-          <dsml:attribute-type id="_id" single-value="true" ms-dsml:immutable="true">
+          <dsml:attribute-type id="_id" single-value="true">
             <dsml:name>_id</dsml:name>
             <dsml:syntax>1.3.6.1.4.1.1466.115.121.1.5</dsml:syntax>
           </dsml:attribute-type>
@@ -138,6 +138,10 @@
             </object_classes>
             <attributes>
             </attributes>
+            <anchor>
+              <attribute object_class="group">_id</attribute>
+              <attribute object_class="person">_id</attribute>
+            </anchor>
           </xmlwizard>
           <ma-help-text>With this management agent, you can run synchronize and run stored procedures with SQL server.</ma-help-text>
         </ui-data>
@@ -154,6 +158,23 @@
         <primary_class_mappings>
         </primary_class_mappings>
         <enable-unapplied-merge>0</enable-unapplied-merge>
+        <password-extension-config>
+          <password-extension-enabled>0</password-extension-enabled>
+          <dll data-owner="ISV">
+          </dll>
+          <password-set-enabled>
+          </password-set-enabled>
+          <password-change-enabled>
+          </password-change-enabled>
+          <connection-info>
+            <connect-to>
+            </connect-to>
+            <user>
+            </user>
+          </connection-info>
+          <timeout>
+          </timeout>
+        </password-extension-config>
         <file-type>Extensible2</file-type>
         <extension-config>
           <filename data-owner="ISV">Granfeldt.SQL.MA.dll</filename>
@@ -172,10 +193,10 @@
           </discovery-hierarchy>
           <password-management-enabled>
           </password-management-enabled>
-          <assembly-version>1.0.0.947</assembly-version>
+          <assembly-version>1.0.2020.1012</assembly-version>
           <supports-parameters-ex>0</supports-parameters-ex>
           <export-type>1</export-type>
-          <capability-bits>2449971248</capability-bits>
+          <capability-bits>2181535792</capability-bits>
         </extension-config>
         <parameter-definitions refreshSchema="0" refreshPartition="0" refreshConnectivityParameters="0" refreshSchemaParameters="0" refreshCapabilitiesParameters="0" refreshGlobalParameters="0" refreshOtherParameters="0">
           <parameter>
@@ -186,7 +207,7 @@
             </validation>
             <text>
             </text>
-            <default-value>data source=192.168.0.31;initial catalog=test;persist security info=true;user id={username};password={password};multipleactiveresultsets=true</default-value>
+            <default-value>data source=192.168.0.225;initial catalog=test;persist security info=true;user id={username};password={password};multipleactiveresultsets=true</default-value>
           </parameter>
           <parameter>
             <name>
@@ -212,19 +233,40 @@
             </default-value>
           </parameter>
           <parameter>
+            <name>Authentication Type</name>
+            <use>connectivity</use>
+            <type>drop-down</type>
+            <validation>SQL,Windows</validation>
+            <text>
+            </text>
+            <default-value>SQL</default-value>
+            <dropdown-extensible>0</dropdown-extensible>
+          </parameter>
+          <parameter>
             <name>Username</name>
             <use>connectivity</use>
             <type>string</type>
-            <validation></validation>
+            <validation>
+            </validation>
+            <text>
+            </text>
+            <default-value>sa</default-value>
+          </parameter>
+          <parameter>
+            <name>Password</name>
+            <use>connectivity</use>
+            <type>encrypted-string</type>
+            <validation>
+            </validation>
             <text>
             </text>
             <default-value>
             </default-value>
           </parameter>
           <parameter>
-            <name>Password</name>
+            <name>Domain</name>
             <use>connectivity</use>
-            <type>encrypted-string</type>
+            <type>string</type>
             <validation>
             </validation>
             <text>
@@ -326,7 +368,7 @@
             <dropdown-extensible>0</dropdown-extensible>
           </parameter>
           <parameter>
-            <name>Date format</name>
+            <name>Delta column name</name>
             <use>connectivity</use>
             <type>string</type>
             <validation>
@@ -337,15 +379,26 @@
             </default-value>
           </parameter>
           <parameter>
-            <name>Delta column name</name>
+            <name>
+            </name>
             <use>connectivity</use>
-            <type>string</type>
+            <type>divider</type>
             <validation>
             </validation>
             <text>
             </text>
             <default-value>
             </default-value>
+          </parameter>
+          <parameter>
+            <name>Date format</name>
+            <use>connectivity</use>
+            <type>string</type>
+            <validation>
+            </validation>
+            <text>
+            </text>
+            <default-value>yyyy-MM-ddTHH:mm:ss.fff</default-value>
           </parameter>
           <parameter>
             <name>
@@ -537,24 +590,6 @@
         </parameter-definitions>
         <parameter-values>
         </parameter-values>
-        <password-extension-config>
-          <password-extension-enabled>0</password-extension-enabled>
-          <dll data-owner="ISV">
-          </dll>
-          <password-set-enabled>
-          </password-set-enabled>
-          <password-change-enabled>
-          </password-change-enabled>
-          <connection-info>
-            <connect-to>
-            </connect-to>
-            <user>
-            </user>
-          </connection-info>
-          <timeout>
-          </timeout>
-        </password-extension-config>
-        <case_normalize_dn_for_anchor>1</case_normalize_dn_for_anchor>
         <default_visible_attributes>
           <attribute>_id</attribute>
           <attribute>accountname</attribute>
@@ -576,7 +611,7 @@
     </ma-partition-data>
     <ma-run-data>
     </ma-run-data>
-    <capabilities-mask>92079831</capabilities-mask>
+    <capabilities-mask>82079831</capabilities-mask>
     <export-type>1</export-type>
     <dn-construction />
     <password-sync>

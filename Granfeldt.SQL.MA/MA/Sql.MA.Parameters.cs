@@ -47,7 +47,7 @@ namespace Granfeldt
 ";
         IList<ConfigParameterDefinition> IMAExtensible2GetParameters.GetConfigParameters(KeyedCollection<string, ConfigParameter> configParameters, ConfigParameterPage page)
         {
-            Tracer.Enter("getconfigparameters");
+            Tracer.Enter(nameof(IMAExtensible2GetParameters.GetConfigParameters));
             try
             {
                 List<ConfigParameterDefinition> configParametersDefinitions = new List<ConfigParameterDefinition>();
@@ -57,8 +57,10 @@ namespace Granfeldt
                         configParametersDefinitions.Add(ConfigParameterDefinition.CreateTextParameter(Configuration.Parameters.ConnectionString, Configuration.ConnectionString));
                         configParametersDefinitions.Add(ConfigParameterDefinition.CreateDividerParameter());
                         configParametersDefinitions.Add(ConfigParameterDefinition.CreateLabelParameter("Authentication (optional): These credentials are replaced in the connection string."));
+                        configParametersDefinitions.Add(ConfigParameterDefinition.CreateDropDownParameter(Configuration.Parameters.TypeOfAuthentication, Configuration.Parameters.AuthenticationTypeSQL + "," + Configuration.Parameters.AuthenticationTypeWindows, false, Configuration.Parameters.AuthenticationTypeSQL));
                         configParametersDefinitions.Add(ConfigParameterDefinition.CreateStringParameter(Configuration.Parameters.Username, "", Configuration.UserName));
                         configParametersDefinitions.Add(ConfigParameterDefinition.CreateEncryptedStringParameter(Configuration.Parameters.Password, "", ""));
+                        configParametersDefinitions.Add(ConfigParameterDefinition.CreateStringParameter(Configuration.Parameters.Domain, "", Configuration.Domain));
 
                         configParametersDefinitions.Add(ConfigParameterDefinition.CreateStringParameter(Configuration.Parameters.TableNameSingleValue, "", Configuration.TableNameSingle));
                         configParametersDefinitions.Add(ConfigParameterDefinition.CreateStringParameter(Configuration.Parameters.TableNameMultiValue, "", ""));
@@ -104,17 +106,17 @@ namespace Granfeldt
             }
             catch (Exception ex)
             {
-                Tracer.TraceError("getconfigparameters", ex);
+                Tracer.TraceError(nameof(IMAExtensible2GetParameters.GetConfigParameters), ex);
                 throw;
             }
             finally
             {
-                Tracer.Exit("getconfigparameters");
+                Tracer.Exit(nameof(IMAExtensible2GetParameters.GetConfigParameters));
             }
         }
         ParameterValidationResult IMAExtensible2GetParameters.ValidateConfigParameters(KeyedCollection<string, ConfigParameter> configParameters, ConfigParameterPage page)
         {
-            Tracer.Enter("validateconfigparameters");
+            Tracer.Enter(nameof(IMAExtensible2GetParameters.ValidateConfigParameters));
             try
             {
                 if (page == ConfigParameterPage.Capabilities)
@@ -140,18 +142,18 @@ namespace Granfeldt
             }
             catch (Exception ex)
             {
-                Tracer.TraceError("validateconfigparameters", ex);
+                Tracer.TraceError(nameof(IMAExtensible2GetParameters.ValidateConfigParameters), ex);
                 throw;
             }
             finally
             {
-                Tracer.Exit("validateconfigparameters");
+                Tracer.Exit(nameof(IMAExtensible2GetParameters.ValidateConfigParameters));
             }
             return new ParameterValidationResult(ParameterValidationResultCode.Success, "", "");
         }
         public void InitializeConfigParameters(System.Collections.ObjectModel.KeyedCollection<string, ConfigParameter> configParameters)
         {
-            Tracer.Enter("initializeconfigparameters");
+            Tracer.Enter(nameof(InitializeConfigParameters));
             try
             {
                 if (configParameters != null)
@@ -162,8 +164,11 @@ namespace Granfeldt
 
                         if (cp.Name.Equals(Configuration.Parameters.SchemaConfiguration)) Configuration.Schema = configParameters[cp.Name].Value.XmlDeserializeFromString<SchemaConfiguration>();
 
+                        if (cp.Name.Equals(Configuration.Parameters.TypeOfAuthentication)) Configuration.TypeOfAuthentication = configParameters[cp.Name].Value;
+
                         if (cp.Name.Equals(Configuration.Parameters.Username)) Configuration.UserName = configParameters[cp.Name].Value;
                         if (cp.Name.Equals(Configuration.Parameters.Password)) Configuration.Password = configParameters[cp.Name].SecureValue.ConvertToUnsecureString();
+                        if (cp.Name.Equals(Configuration.Parameters.Domain)) Configuration.Domain = configParameters[cp.Name].Value;
 
                         if (cp.Name.Equals(Configuration.Parameters.ConnectionString)) Configuration.ConnectionString = configParameters[cp.Name].Value;
 
@@ -218,27 +223,17 @@ namespace Granfeldt
                                     break;
                             }
                         }
-                        //if (cp.Name.Equals(Constants.Parameters.ImpersonationDomain)) impersonationUserDomain = configParameters[cp.Name].Value;
-                        //if (cp.Name.Equals(Constants.Parameters.ImpersonationUsername)) impersonationUsername = configParameters[cp.Name].Value;
-                        //if (cp.Name.Equals(Constants.Parameters.ImpersonationPassword)) impersonationUserPassword = configParameters[cp.Name].SecureValue.ConvertToUnsecureString();
-
-                        //if (cp.Name.Equals(Constants.Parameters.SchemaScript)) SchemaScript = configParameters[cp.Name].Value;
-                        //if (cp.Name.Equals(Constants.Parameters.ImportScript)) ImportScript = configParameters[cp.Name].Value;
-                        //if (cp.Name.Equals(Constants.Parameters.ExportScript)) ExportScript = configParameters[cp.Name].Value;
-                        //if (cp.Name.Equals(Constants.Parameters.PasswordManagementScript)) PasswordManagementScript = configParameters[cp.Name].Value;
-                        //if (cp.Name.Equals(Constants.Parameters.ExportSimpleObjects)) ExportSimpleObjects = configParameters[cp.Name].Value == "0" ? false : true;
-                        //if (cp.Name.Equals(Constants.Parameters.UsePagedImport)) UsePagedImport = configParameters[cp.Name].Value == "0" ? false : true;
                     }
                 }
             }
             catch (Exception ex)
             {
-                Tracer.TraceError("initializeconfigparameters", ex);
+                Tracer.TraceError(nameof(InitializeConfigParameters), ex);
                 throw;
             }
             finally
             {
-                Tracer.Exit("initializeconfigparameters");
+                Tracer.Exit(nameof(InitializeConfigParameters));
             }
         }
 

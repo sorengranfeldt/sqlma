@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration.cs" />
+    <Compile Include="SqlMethods\SqlMethods.Impersonation.cs" />
     <Compile Include="MA\Sql.MA.Dispose.cs" />
     <Compile Include="MA\Sql.MA.Capabilities.cs" />
     <Compile Include="MA\Sql.MA.ExportDetached.cs" />
@@ -66,7 +67,9 @@
     <Compile Include="Tracer.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Granfeldt.SQL.MA.2017-10-23.xml" />
     <Content Include="Granfeldt.SQL.MA.2017.xml" />
+    <Content Include="Granfeldt.SQL.MA.2019-11-25.xml" />
     <Content Include="Granfeldt.SQL.MA.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -80,6 +83,7 @@
     </None>
     <None Include="ma-createpackage.cmd" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

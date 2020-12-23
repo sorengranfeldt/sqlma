@@ -11,33 +11,12 @@ namespace Granfeldt
 		public static TraceSource Trace = new TraceSource(SourceName, SourceLevels.All);
 		static string IndentText = ""; 
 
-		public static int IndentLevel
-		{
-			get
-			{
-				return IndentText.Length;
-			}
-			set
-			{
-				IndentText = "";
-			}
-		}
-		public static void Indent()
-		{
-			IndentText = IndentText + "  ";
-		}
-		public static void Unindent()
-		{
-			IndentText = IndentText.EndsWith("  ") ? IndentText.Remove(IndentText.Length - 2) : IndentText;
-		}
 		public static void Enter(string entryPoint)
 		{
 			TraceInformation("enter {0}", entryPoint);
-			Indent();
 		}
 		public static void Exit(string entryPoint)
 		{
-			Unindent();
 			TraceInformation("exit {0}", entryPoint);
 		}
 		public static void TraceInformation(string message, params object[] param)

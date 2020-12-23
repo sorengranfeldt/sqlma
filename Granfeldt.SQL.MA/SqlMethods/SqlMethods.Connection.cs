@@ -1,23 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Data;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.MetadirectoryServices;
 
 namespace Granfeldt
 {
 
-	public partial class SqlMethods : IDisposable
+    public partial class SqlMethods : IDisposable
 	{
 		SqlConnection con;
 
 		public void OpenConnection()
 		{
-			Tracer.Enter("openconnection");
+			Tracer.Enter(nameof(OpenConnection));
 			
 			Configuration.ConnectionString = Configuration.ConnectionString.Replace("{username}", Configuration.UserName);
 			Configuration.ConnectionString = Configuration.ConnectionString.Replace("{domain}", Configuration.Domain);
@@ -25,19 +18,22 @@ namespace Granfeldt
 			maskedConnectionString = Configuration.ConnectionString.Replace("{password}", "***");
 			Configuration.ConnectionString = Configuration.ConnectionString.Replace("{password}", Configuration.Password);
 
-			Tracer.TraceInformation("connection-string {0}", maskedConnectionString);
+			Tracer.TraceInformation($"connection-string {maskedConnectionString}");
+
+			SetupImpersonationToken();
+
 			con = new SqlConnection(Configuration.ConnectionString);
 			con.Open();
 			if (con.State == System.Data.ConnectionState.Open)
 			{
-				Tracer.TraceInformation("sql-server-version {0}", con.ServerVersion);
+				Tracer.TraceInformation($"sql-server-version {con.ServerVersion}");
 			}
-			Tracer.Exit("openconnection");
+			Tracer.Exit(nameof(OpenConnection));
 		}
 		public void CloseConnection()
 		{
-			Tracer.Enter("closeconnection");
-			Tracer.TraceInformation("connection-state {0}", con.State);
+			Tracer.Enter(nameof(CloseConnection));
+			Tracer.TraceInformation($"connection-state {con.State}");
 			if (con.State != System.Data.ConnectionState.Closed)
 			{
 				con.Close();
@@ -47,7 +43,8 @@ namespace Granfeldt
 			{
 				Tracer.TraceInformation("connection-already-closed");
 			}
-			Tracer.Exit("closeconnection");
+			RevertImpersonation();
+			Tracer.Exit(nameof(CloseConnection));
 		}
 	}
 }

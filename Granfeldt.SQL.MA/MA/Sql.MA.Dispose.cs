@@ -14,7 +14,7 @@ namespace Granfeldt
 		private bool disposedValue = false; // To detect redundant calls
 		protected virtual void Dispose(bool disposing)
 		{
-			Tracer.Enter("dispose-ma");
+			Tracer.Enter(nameof(Dispose));
 			if (!disposedValue)
 			{
 				if (disposing)
@@ -23,7 +23,7 @@ namespace Granfeldt
 				}
 				disposedValue = true;
 			}
-			Tracer.Exit("dispose-ma");
+			Tracer.Exit(nameof(Dispose));
 		}
 		~SQLManagementAgent()
 		{
