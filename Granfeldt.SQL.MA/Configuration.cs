@@ -170,7 +170,8 @@ namespace Granfeldt
 			public const string ExportCommandAfter = "Run after export";
 			public const string ExportObjectCommandBefore = "Run before export object";
 			public const string ExportObjectCommandAfter = "Run after export object";
-			public const string CommandTimeout = "Stored Procedure timeout seconds (default 30)";
+			//Define the Stored Procedure command timeout text
+			public const string CommandTimeout = "Stored Procedure timeout in seconds (min=30, max=99999, default=30)";
 
 
 			public const string DateFormat = "Date format";

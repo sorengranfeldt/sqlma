@@ -96,7 +96,9 @@ namespace Granfeldt
                         configParametersDefinitions.Add(ConfigParameterDefinition.CreateStringParameter(Configuration.Parameters.ExportObjectCommandBefore, Configuration.ExportObjectCommandBefore));
                         configParametersDefinitions.Add(ConfigParameterDefinition.CreateStringParameter(Configuration.Parameters.ExportObjectCommandAfter, Configuration.ExportObjectCommandAfter));
                         configParametersDefinitions.Add(ConfigParameterDefinition.CreateDividerParameter());
-                        configParametersDefinitions.Add(ConfigParameterDefinition.CreateStringParameter(Configuration.Parameters.CommandTimeout, Configuration.CommandTimeout, Configuration.CommandTimeout));
+                        //Regex validating minimal 30 and max 99999 seconds: "^([3-9][0-9]|[0-9][0-9][0-9]|[0-9][0-9][0-9][0-9]|[0-9][0-9][0-9][0-9][0-9])$"
+                        configParametersDefinitions.Add(ConfigParameterDefinition.CreateStringParameter(Configuration.Parameters.CommandTimeout, "^([3-9][0-9]|[0-9][0-9][0-9]|[0-9][0-9][0-9][0-9]|[0-9][0-9][0-9][0-9][0-9])$", Configuration.CommandTimeout));
+
 
 
                         break;

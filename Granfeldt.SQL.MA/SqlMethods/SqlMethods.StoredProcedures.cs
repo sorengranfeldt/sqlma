@@ -65,20 +65,16 @@ namespace Granfeldt
 				using (SqlCommand cmd = new SqlCommand(query, con))
 				{
 					cmd.CommandType = CommandType.StoredProcedure;
-					
-					if(CommandTimeout > 30)
-					{
-						Tracer.Enter("runstoredprocedure: CommandTimeout = " + CommandTimeout);
-						cmd.CommandTimeout = CommandTimeout;
-					}
-					
+
+                    //Set the command timeout in seconds (Source: https://docs.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlcommand.commandtimeout?view=netframework-4.5.2
 					cmd.CommandTimeout = CommandTimeout;
+
 					foreach (SqlParameter param in parameters)
 					{
 						Tracer.TraceInformation("add-parameter name: {0}, value: '{1}'", param.ParameterName, param.SqlValue);
 						cmd.Parameters.Add(param);
 					}
-					Tracer.TraceInformation("run-storedprocedure {0}", query);
+					Tracer.TraceInformation("run-storedprocedure {0} with command timeout: {1}", query, CommandTimeout);
 					Tracer.TraceInformation("rows-affected {0:n0}", cmd.ExecuteNonQuery());
 				}
 			}
