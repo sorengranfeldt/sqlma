@@ -95,6 +95,11 @@ namespace Granfeldt
                         configParametersDefinitions.Add(ConfigParameterDefinition.CreateStringParameter(Configuration.Parameters.ExportCommandAfter, Configuration.ExportCommandAfter));
                         configParametersDefinitions.Add(ConfigParameterDefinition.CreateStringParameter(Configuration.Parameters.ExportObjectCommandBefore, Configuration.ExportObjectCommandBefore));
                         configParametersDefinitions.Add(ConfigParameterDefinition.CreateStringParameter(Configuration.Parameters.ExportObjectCommandAfter, Configuration.ExportObjectCommandAfter));
+                        configParametersDefinitions.Add(ConfigParameterDefinition.CreateDividerParameter());
+                        //Regex validating minimal 30 and max 99999 seconds: "^([3-9][0-9]|[0-9][0-9][0-9]|[0-9][0-9][0-9][0-9]|[0-9][0-9][0-9][0-9][0-9])$"
+                        configParametersDefinitions.Add(ConfigParameterDefinition.CreateStringParameter(Configuration.Parameters.CommandTimeout, "^([3-9][0-9]|[0-9][0-9][0-9]|[0-9][0-9][0-9][0-9]|[0-9][0-9][0-9][0-9][0-9])$", Configuration.CommandTimeout));
+
+
 
                         break;
                     case ConfigParameterPage.Partition:
@@ -189,6 +194,7 @@ namespace Granfeldt
                         if (cp.Name.Equals(Configuration.Parameters.ExportCommandAfter)) Configuration.ExportCommandAfter = configParameters[cp.Name].Value;
                         if (cp.Name.Equals(Configuration.Parameters.ExportObjectCommandBefore)) Configuration.ExportObjectCommandBefore = configParameters[cp.Name].Value;
                         if (cp.Name.Equals(Configuration.Parameters.ExportObjectCommandAfter)) Configuration.ExportObjectCommandAfter = configParameters[cp.Name].Value;
+                        if (cp.Name.Equals(Configuration.Parameters.CommandTimeout)) Configuration.CommandTimeout = configParameters[cp.Name].Value;
 
                         if (cp.Name.Equals(Configuration.Parameters.DateFormat)) Configuration.DateFormat = configParameters[cp.Name].Value;
 

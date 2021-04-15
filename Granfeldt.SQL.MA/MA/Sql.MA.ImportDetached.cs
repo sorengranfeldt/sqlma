@@ -306,7 +306,7 @@ namespace Granfeldt
                     List<SqlParameter> parameters = new List<SqlParameter>();
                     parameters.Add(new SqlParameter("importtype", ImportType.ToString()));
                     parameters.Add(new SqlParameter("customdata", CustomData));
-                    methods.RunStoredProcedure(Configuration.ImportCommandBefore, parameters);
+                    methods.RunStoredProcedure(Configuration.ImportCommandBefore, parameters, Convert.ToInt32(Configuration.CommandTimeout));
                     parameters.Clear();
                     parameters = null;
                 }
@@ -409,7 +409,7 @@ namespace Granfeldt
                     List<SqlParameter> parameters = new List<SqlParameter>();
                     parameters.Add(new SqlParameter("importtype", ImportType.ToString()));
                     parameters.Add(new SqlParameter("customdata", CustomData));
-                    methods.RunStoredProcedure(Configuration.ImportCommandAfter, parameters);
+                    methods.RunStoredProcedure(Configuration.ImportCommandAfter, parameters, Convert.ToInt32(Configuration.CommandTimeout));
                     parameters.Clear();
                     parameters = null;
                 }

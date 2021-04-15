@@ -65,8 +65,9 @@ namespace Granfeldt
 		public static string ExportObjectCommandBefore = "";
 		public static string ExportObjectCommandAfter = "";
         public static string DateFormat = "yyyy-MM-ddTHH:mm:ss.fff";
+		public static string CommandTimeout = "30";
 
-        public static ObjectClassType ObjectClassType = ObjectClassType.Column;
+		public static ObjectClassType ObjectClassType = ObjectClassType.Column;
 		public static DeltaColumnType DeltaColumnType = DeltaColumnType.Rowversion;
 
 		public static SchemaConfiguration Schema = new SchemaConfiguration();
@@ -169,8 +170,11 @@ namespace Granfeldt
 			public const string ExportCommandAfter = "Run after export";
 			public const string ExportObjectCommandBefore = "Run before export object";
 			public const string ExportObjectCommandAfter = "Run after export object";
+			//Define the Stored Procedure command timeout text
+			public const string CommandTimeout = "Stored Procedure timeout in seconds (min=30, max=99999, default=30)";
 
-            public const string DateFormat = "Date format";
+
+			public const string DateFormat = "Date format";
         }
 		public static IEnumerable<string> ReservedColumnNames
 		{

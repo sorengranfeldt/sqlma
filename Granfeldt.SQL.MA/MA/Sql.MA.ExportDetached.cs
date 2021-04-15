@@ -47,7 +47,7 @@ namespace Granfeldt
 				{
 					List<SqlParameter> parameters = new List<SqlParameter>();
 					parameters.Add(new SqlParameter("exporttype", ExportType.ToString()));
-					methods.RunStoredProcedure(Configuration.ExportCommandBefore, parameters);
+					methods.RunStoredProcedure(Configuration.ExportCommandBefore, parameters, Convert.ToInt32(Configuration.CommandTimeout));
 				}
 			}
 			catch (Exception ex)
@@ -91,7 +91,7 @@ namespace Granfeldt
 						List<SqlParameter> parameters = new List<SqlParameter>();
 						parameters.Add(new SqlParameter("anchor", anchor));
 						parameters.Add(new SqlParameter("action", exportChange.ObjectModificationType.ToString()));
-						methods.RunStoredProcedure(Configuration.ExportObjectCommandBefore, parameters);
+						methods.RunStoredProcedure(Configuration.ExportObjectCommandBefore, parameters, Convert.ToInt32(Configuration.CommandTimeout));
 					}
 
 					Tracer.TraceInformation("export-object {0}, cs-id: {1}, anchor: {2}, dn: {3} [{4}]", objectClass, exportChange.Identifier, anchor, exportChange.DN, exportChange.ObjectModificationType);
@@ -171,7 +171,7 @@ namespace Granfeldt
 							List<SqlParameter> parameters = new List<SqlParameter>();
 							parameters.Add(new SqlParameter("anchor", anchor));
 							parameters.Add(new SqlParameter("action", exportChange.ObjectModificationType.ToString()));
-							methods.RunStoredProcedure(Configuration.ExportObjectCommandAfter, parameters);
+							methods.RunStoredProcedure(Configuration.ExportObjectCommandAfter, parameters, Convert.ToInt32(Configuration.CommandTimeout));
 						}
 					}
 					catch (Exception exportEx)
@@ -202,7 +202,7 @@ namespace Granfeldt
 				{
 					List<SqlParameter> parameters = new List<SqlParameter>();
 					parameters.Add(new SqlParameter("exporttype", ExportType.ToString()));
-					methods.RunStoredProcedure(Configuration.ExportCommandAfter, parameters);
+					methods.RunStoredProcedure(Configuration.ExportCommandAfter, parameters, Convert.ToInt32(Configuration.CommandTimeout));
 				}
 				methods.CloseConnection();
 			}
