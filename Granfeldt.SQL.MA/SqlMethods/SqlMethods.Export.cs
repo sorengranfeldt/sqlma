@@ -32,7 +32,7 @@ namespace Granfeldt
 					query = string.Format("insert into {0} ([{1}], [{2}]) values (@anchor, @objectclass)", Configuration.TableNameSingle, Configuration.AnchorColumn, Configuration.ObjectClass);
 					if (Configuration.ObjectClassType == ObjectClassType.Fixed)
 					{
-						query = string.Format("insert into [{0}] ([{1}]) values (@anchor)", Configuration.TableNameSingle, Configuration.AnchorColumn);
+						query = string.Format("insert into {0} ([{1}]) values (@anchor)", Configuration.TableNameSingle, Configuration.AnchorColumn);
 					}
 				}
 				query = string.Concat(query, "; select scope_identity();");
@@ -92,7 +92,7 @@ namespace Granfeldt
 			Tracer.Enter("undelete");
 			try
 			{
-				string query = string.Format("update {0} set [{1}] = null where [{2}] = @anchor", Configuration.TableNameSingle, Configuration.DeletedColumn, Configuration.AnchorColumn);
+				string query = string.Format("update {0} set [{1}] = 0 where [{2}] = @anchor", Configuration.TableNameSingle, Configuration.DeletedColumn, Configuration.AnchorColumn);
 				using (SqlCommand cmd = new SqlCommand(query, con))
 				{
 					cmd.Parameters.AddWithValue("@anchor", anchor);
