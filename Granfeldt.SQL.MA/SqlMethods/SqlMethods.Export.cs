@@ -67,7 +67,7 @@ namespace Granfeldt
 			Tracer.Enter("existrecord");
 			try
 			{
-				string query = string.Format("select {0} from {1} where [{0}] = @anchor;", Configuration.AnchorColumn, Configuration.TableNameSingle, Configuration.AnchorColumn);
+				string query = string.Format("select [{0}] from {1} where [{0}] = @anchor;", Configuration.AnchorColumn, Configuration.TableNameSingle, Configuration.AnchorColumn);
 				using (SqlCommand cmd = new SqlCommand(query, con))
 				{
 					cmd.Parameters.AddWithValue("@anchor", anchor);

@@ -82,11 +82,11 @@ namespace Granfeldt
 				{
 					if (Configuration.HasDeletedColumn)
 					{
-						queries.Add(string.Format("select {0} from {1} where ([{2}] is null) or ([{2}] = 0)", Configuration.AnchorColumn, Configuration.TableNameSingle, Configuration.DeletedColumn));
+						queries.Add(string.Format("select [{0}] from {1} where ([{2}] is null) or ([{2}] = 0)", Configuration.AnchorColumn, Configuration.TableNameSingle, Configuration.DeletedColumn));
 					}
 					else
 					{
-						queries.Add(string.Format("select {0} from {1}", Configuration.AnchorColumn, Configuration.TableNameSingle));
+						queries.Add(string.Format("select [{0}] from {1}", Configuration.AnchorColumn, Configuration.TableNameSingle));
 					}
 				}
 				else
@@ -106,10 +106,10 @@ namespace Granfeldt
 							deltaWaterMark = string.Concat("'", customData.TrimEnd('Z'), "'");
 						}
 					}
-					queries.Add(string.Format("select {0} from {1} where ([{2}] > {3})", Configuration.AnchorColumn, Configuration.TableNameSingle, Configuration.DeltaColumn, deltaWaterMark));
+					queries.Add(string.Format("select [{0}] from {1} where ([{2}] > {3})", Configuration.AnchorColumn, Configuration.TableNameSingle, Configuration.DeltaColumn, deltaWaterMark));
 					if (Configuration.HasMultivalueTable)
 					{
-						queries.Add(string.Format("select {0} from {1} where ([{2}] > {3})", Configuration.BackReferenceColumn, Configuration.TableNameMulti, Configuration.DeltaColumn, deltaWaterMark));
+						queries.Add(string.Format("select [{0}] from {1} where ([{2}] > {3})", Configuration.BackReferenceColumn, Configuration.TableNameMulti, Configuration.DeltaColumn, deltaWaterMark));
 					}
 				}
 
