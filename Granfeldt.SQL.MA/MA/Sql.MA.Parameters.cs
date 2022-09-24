@@ -1,13 +1,10 @@
 ﻿// december 3, 2017 :: søren granfeldt
 //  - fixed issue with validation value in username parameter
 
+using Microsoft.MetadirectoryServices;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.MetadirectoryServices;
 
 namespace Granfeldt
 {
@@ -98,8 +95,6 @@ namespace Granfeldt
                         configParametersDefinitions.Add(ConfigParameterDefinition.CreateDividerParameter());
                         //Regex validating minimal 30 and max 99999 seconds: "^([3-9][0-9]|[0-9][0-9][0-9]|[0-9][0-9][0-9][0-9]|[0-9][0-9][0-9][0-9][0-9])$"
                         configParametersDefinitions.Add(ConfigParameterDefinition.CreateStringParameter(Configuration.Parameters.CommandTimeout, "^([3-9][0-9]|[0-9][0-9][0-9]|[0-9][0-9][0-9][0-9]|[0-9][0-9][0-9][0-9][0-9])$", Configuration.CommandTimeout));
-
-
 
                         break;
                     case ConfigParameterPage.Partition:

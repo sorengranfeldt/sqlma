@@ -1,122 +1,119 @@
-﻿using System;
+﻿using Microsoft.MetadirectoryServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.MetadirectoryServices;
-using System.Data;
-using System.Data.SqlClient;
 
 namespace Granfeldt
 {
-	[TestClass]
-	public class SqlTests
-	{
-		SqlMethods methods = new SqlMethods();
+    [TestClass]
+    public class SqlTests
+    {
+        SqlMethods methods = new SqlMethods();
 
-		[TestMethod]
-		public void GetObjectClasses()
-		{
-			methods.OpenConnection();
-			foreach (string str in methods.GetObjectClasses())
-			{
-				Tracer.TraceInformation("got-objectclass {0}", str);
-			}
-			methods.Dispose();
-		}
+        [TestMethod]
+        public void GetObjectClasses()
+        {
+            methods.OpenConnection();
+            foreach (string str in methods.GetObjectClasses())
+            {
+                Tracer.TraceInformation("got-objectclass {0}", str);
+            }
+            methods.Dispose();
+        }
 
-		[TestMethod]
-		public void GetSingleValueColumns()
-		{
-			methods.OpenConnection();
-			foreach (AttributeDefinition ad in methods.GetSchema(Configuration.TableNameSingle))
-			{
-			}
-			methods.Dispose();
-		}
+        [TestMethod]
+        public void GetSingleValueColumns()
+        {
+            methods.OpenConnection();
+            foreach (AttributeDefinition ad in methods.GetSchema(Configuration.TableNameSingle))
+            {
+            }
+            methods.Dispose();
+        }
 
-		[TestMethod]
-		public void GetMultiValueColumns()
-		{
-			methods.OpenConnection();
-			foreach (AttributeDefinition ad in methods.GetSchema(Configuration.TableNameMulti))
-			{
-			}
-			methods.Dispose();
-		}
+        [TestMethod]
+        public void GetMultiValueColumns()
+        {
+            methods.OpenConnection();
+            foreach (AttributeDefinition ad in methods.GetSchema(Configuration.TableNameMulti))
+            {
+            }
+            methods.Dispose();
+        }
 
-		[TestMethod]
-		public void GetMASchema()
-		{
+        [TestMethod]
+        public void GetMASchema()
+        {
 
-			using (SQLManagementAgent ma = new SQLManagementAgent())
-			{
-				Configuration.Schema = ma.DefaultSchemaXml.XmlDeserializeFromString<SchemaConfiguration>();
-				Schema schema = ma.GetSchemaDetached();
-			}
-		}
+            using (SQLManagementAgent ma = new SQLManagementAgent())
+            {
+                Configuration.Schema = ma.DefaultSchemaXml.XmlDeserializeFromString<SchemaConfiguration>();
+                Schema schema = ma.GetSchemaDetached();
+            }
+        }
 
-		[TestMethod]
-		public void GetFullImport()
-		{
-			using (SQLManagementAgent ma = new SQLManagementAgent())
-			{
-				Configuration.Schema = ma.DefaultSchemaXml.XmlDeserializeFromString<SchemaConfiguration>();
-				Schema schema = ma.GetSchemaDetached();
+        [TestMethod]
+        public void GetFullImport()
+        {
+            using (SQLManagementAgent ma = new SQLManagementAgent())
+            {
+                Configuration.Schema = ma.DefaultSchemaXml.XmlDeserializeFromString<SchemaConfiguration>();
+                Schema schema = ma.GetSchemaDetached();
 
-				ma.Schema = schema;
-				ma.ImportType = OperationType.Full;
+                ma.Schema = schema;
+                ma.ImportType = OperationType.Full;
 
-				OpenImportConnectionRunStep dummyOpenImportRunStep = new OpenImportConnectionRunStep();
+                OpenImportConnectionRunStep dummyOpenImportRunStep = new OpenImportConnectionRunStep();
 
-				// fake runstep data
-				ma.ImportType = OperationType.Full;
-				ma.CustomData = "";
-				ma.PageSize = 100;
+                // fake runstep data
+                ma.ImportType = OperationType.Full;
+                ma.CustomData = "";
+                ma.PageSize = 100;
 
-				System.Collections.ObjectModel.KeyedCollection<string, ConfigParameter> configParams = null;
-				ma.OpenImportConnectionDetached(configParams, schema, null);
+                System.Collections.ObjectModel.KeyedCollection<string, ConfigParameter> configParams = null;
+                ma.OpenImportConnectionDetached(configParams, schema, null);
 
-				GetImportEntriesRunStep rs = new GetImportEntriesRunStep();
+                GetImportEntriesRunStep rs = new GetImportEntriesRunStep();
 
-				GetImportEntriesResults rest = new GetImportEntriesResults();
-				rest.MoreToImport = true;
-				while (rest.MoreToImport)
-				{
+                GetImportEntriesResults rest = new GetImportEntriesResults();
+                rest.MoreToImport = true;
+                while (rest.MoreToImport)
+                {
                     rest = ma.GetImportEntriesDetached(rs);
-				}
-				
-				CloseImportConnectionRunStep dummyCloseImportRunStep = null;
-				ma.CloseImportConnectionDetached(dummyCloseImportRunStep);
-			}
-		}
-		[TestMethod]
-		public void GetDeltaImport()
-		{
-			using (SQLManagementAgent ma = new SQLManagementAgent())
-			{
-				Configuration.Schema = ma.DefaultSchemaXml.XmlDeserializeFromString<SchemaConfiguration>();
-				Schema schema = ma.GetSchemaDetached();
+                }
 
-				// first get full data to get deltawatermark
-				ma.Schema = schema;
-				ma.ImportType = OperationType.Delta;
-				ma.CustomData = "140180";
-				ma.PageSize = 1;
+                CloseImportConnectionRunStep dummyCloseImportRunStep = null;
+                ma.CloseImportConnectionDetached(dummyCloseImportRunStep);
+            }
+        }
+        [TestMethod]
+        public void GetDeltaImport()
+        {
+            using (SQLManagementAgent ma = new SQLManagementAgent())
+            {
+                Configuration.Schema = ma.DefaultSchemaXml.XmlDeserializeFromString<SchemaConfiguration>();
+                Schema schema = ma.GetSchemaDetached();
 
-				System.Collections.ObjectModel.KeyedCollection<string, ConfigParameter> configParams = null;
-				ma.OpenImportConnectionDetached(configParams, schema, null);
+                // first get full data to get deltawatermark
+                ma.Schema = schema;
+                ma.ImportType = OperationType.Delta;
+                ma.CustomData = "140180";
+                ma.PageSize = 1;
 
-				GetImportEntriesRunStep rs = new GetImportEntriesRunStep();
+                System.Collections.ObjectModel.KeyedCollection<string, ConfigParameter> configParams = null;
+                ma.OpenImportConnectionDetached(configParams, schema, null);
 
-				GetImportEntriesResults rest = new GetImportEntriesResults();
-				rest.MoreToImport = true;
-				while (rest.MoreToImport)
-				{
-					rest = ma.GetImportEntriesDetached(rs);
-				}
+                GetImportEntriesRunStep rs = new GetImportEntriesRunStep();
 
-				CloseImportConnectionRunStep dummyCloseImportRunStep = null;
-				ma.CloseImportConnectionDetached(dummyCloseImportRunStep);
-			}
-		}
+                GetImportEntriesResults rest = new GetImportEntriesResults();
+                rest.MoreToImport = true;
+                while (rest.MoreToImport)
+                {
+                    rest = ma.GetImportEntriesDetached(rs);
+                }
 
-	}
+                CloseImportConnectionRunStep dummyCloseImportRunStep = null;
+                ma.CloseImportConnectionDetached(dummyCloseImportRunStep);
+            }
+        }
+
+    }
 }

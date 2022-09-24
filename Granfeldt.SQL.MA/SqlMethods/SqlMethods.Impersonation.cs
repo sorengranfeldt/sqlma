@@ -1,5 +1,4 @@
-﻿using Microsoft.MetadirectoryServices;
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Security.Principal;
@@ -93,10 +92,7 @@ namespace Granfeldt
         IntPtr tokenDuplicate = IntPtr.Zero;
         WindowsImpersonationContext m_ImpersonationContext;
 
-        bool ShouldImpersonate()
-        {
-            return Configuration.TypeOfAuthentication == Configuration.Parameters.AuthenticationTypeWindows;
-        }
+        bool ShouldImpersonate() => Configuration.TypeOfAuthentication == Configuration.Parameters.AuthenticationTypeWindows;
 
         void SetupImpersonationToken()
         {
@@ -190,13 +186,13 @@ namespace Granfeldt
             {
                 using (WindowsIdentity currentIdentity = WindowsIdentity.GetCurrent())
                 {
-                    Tracer.TraceInformation("identity-name: {0}", currentIdentity.Name);
-                    Tracer.TraceInformation("identity-token: {0}", currentIdentity.Token);
-                    Tracer.TraceInformation("identity-user-value: {0}", currentIdentity.User.Value);
+                    Tracer.TraceInformation($"identity-name: {currentIdentity.Name}");
+                    Tracer.TraceInformation($"identity-token: {currentIdentity.Token}");
+                    Tracer.TraceInformation($"identity-user-value: {currentIdentity.User.Value}");
                     if (currentIdentity.Actor != null)
                     {
-                        Tracer.TraceInformation("identity-actor: {0}", currentIdentity.Actor.Name);
-                        Tracer.TraceInformation("identity-actor-auth-type: {0}", currentIdentity.Actor.AuthenticationType);
+                        Tracer.TraceInformation($"identity-actor: {currentIdentity.Actor.Name}");
+                        Tracer.TraceInformation($"identity-actor-auth-type: {currentIdentity.Actor.AuthenticationType}");
                     }
                     if (currentIdentity.Groups != null)
                     {
@@ -205,7 +201,7 @@ namespace Granfeldt
                             try
                             {
                                 NTAccount account = group.Translate(typeof(NTAccount)) as NTAccount;
-                                Tracer.TraceInformation("group-membership {0}", account.Value);
+                                Tracer.TraceInformation($"group-membership {account.Value}");
                             }
                             catch (Exception ex)
                             {

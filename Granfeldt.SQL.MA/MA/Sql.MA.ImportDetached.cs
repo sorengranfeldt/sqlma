@@ -3,16 +3,13 @@
 // november 13, 2019, soren granfeldt
 //	- added handling of datetime types to use specific date format (same as FIM Service) to make sure local date formats are not used
 
+using Microsoft.MetadirectoryServices;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.MetadirectoryServices;
 using System.Data;
-using System.Globalization;
 using System.Data.SqlClient;
+using System.Linq;
 
 namespace Granfeldt
 {
@@ -58,10 +55,7 @@ namespace Granfeldt
             }
         }
 
-        bool IsDateTimeType(Type type)
-        {
-            return typeof(DateTime) == type || typeof(DateTimeOffset) == type;
-        }
+        bool IsDateTimeType(Type type) => typeof(DateTime) == type || typeof(DateTimeOffset) == type;
 
         object GetSafeValue(DataRow dataRow, string attributeName, AttributeType attributeType, bool DeltaDate = false)
         {
@@ -267,14 +261,14 @@ namespace Granfeldt
                     }
                     catch (Exception iex)
                     {
-                        Tracer.TraceError("datasettocsentrychanges", iex);
+                        Tracer.TraceError(nameof(DataSetToCsEntryChanges), iex);
                     }
                     yield return csentry;
                 }
             }
             finally
             {
-                Tracer.Exit("datasettocsentrychanges");
+                Tracer.Exit(nameof(DataSetToCsEntryChanges));
             }
         }
 
@@ -291,9 +285,9 @@ namespace Granfeldt
                     CustomData = ImportType == OperationType.Delta ? importRunStep.CustomData : null;
                     PageSize = importRunStep.PageSize;
                 }
-                Tracer.TraceInformation("import-type {0}", ImportType);
-                Tracer.TraceInformation("customdata {0}", CustomData);
-                Tracer.TraceInformation("pagesize {0}", PageSize);
+                Tracer.TraceInformation($"import-type {ImportType}");
+                Tracer.TraceInformation($"customdata {CustomData}");
+                Tracer.TraceInformation($"pagesize {PageSize}");
 
                 Schema = types;
 
@@ -384,13 +378,14 @@ namespace Granfeldt
                 results.CustomData = CustomData == null ? "" : CustomData;
                 results.CSEntries = batch;
 
-                Tracer.TraceInformation("more-to-import {0}", results.MoreToImport);
-                Tracer.TraceInformation("custom-data '{0}'", results.CustomData);
+                Tracer.TraceInformation($"more-to-import {results.MoreToImport}");
+                Tracer.TraceInformation($"custom-data '{results.CustomData}'");
                 Tracer.TraceInformation("csobjects-returned {0:n0}", results.CSEntries.Count);
             }
             catch (Exception ex)
             {
                 Tracer.TraceError(nameof(GetImportEntriesDetached), ex);
+                throw;
             }
             finally
             {
