@@ -2,6 +2,8 @@
 //	-added disposable of dataset and lists after import
 // november 13, 2019, soren granfeldt
 //	- added handling of datetime types to use specific date format (same as FIM Service) to make sure local date formats are not used
+// november 11, 2023, soren granfeldt
+//	- added import check for included objectclasses (only return included object types)
 
 using Microsoft.MetadirectoryServices;
 using System;
@@ -174,6 +176,11 @@ namespace Granfeldt
                         csentry = CSEntryChange.Create();
                         string Dn = GetSafeValue(singleRow, DNColumn, AttributeType.String).ToString();
                         string objectClass = Configuration.ObjectClassType == ObjectClassType.Column ? GetSafeValue(singleRow, objectclasscolumnname, AttributeType.String).ToString() : Configuration.ObjectClass;
+                        if (!Schema.Types.Contains(objectClass))
+                        {
+                            Tracer.TraceInformation($"skip-record objectclass: {objectClass}, DN: {Dn}");
+                            continue;
+                        }
                         object anchorValue = GetSafeValue(singleRow, singleanchor, Schema.Types[objectClass].AnchorAttributes[0].DataType);
                         bool isDeleted = false; // assume false
                         if (handleSoftDeletion)
