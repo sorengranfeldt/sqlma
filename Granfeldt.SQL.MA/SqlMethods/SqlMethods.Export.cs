@@ -265,7 +265,7 @@ namespace Granfeldt
                 string query = null;
                 if (softDelete)
                 {
-                    query = string.Format("update {0} set [{1}] = 1 where ([{2}] = @anchor and [{3}] is not null and [{1}] <> 1)", Configuration.TableNameMulti, Configuration.DeletedColumn, Configuration.BackReferenceColumn, attributeName);
+                    query = string.Format("update {0} set [{1}] = 1 where ([{2}] = @anchor and [{3}] is not null and ([{2}] is null) or ([{2}] = 0))", Configuration.TableNameMulti, Configuration.DeletedColumn, Configuration.BackReferenceColumn, attributeName);
                 }
                 else
                 {
