@@ -1,10 +1,13 @@
-﻿using System;
-using System.Data.SqlClient;
-
-// august 8, 2016 | soren granfeldt
+﻿// august 8, 2016 | soren granfeldt
 //	- changed string.Concat element order to fix buggy select scope_identity
 // september 20, 2022 | soren granfeldt
 //	- add throw to try/catch to bubble any errors up
+// march 27, 2024 | soren granfeldt
+//  - merged fix for bug where deletes are exported and softdeletes are used and the DeletedColumn is NULL instead of 0 then the delete is not processed.
+
+using System;
+using System.Data.SqlClient;
+
 
 namespace Granfeldt
 {
