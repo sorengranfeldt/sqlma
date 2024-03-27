@@ -1,4 +1,7 @@
-﻿using System;
+﻿// march 27, 2024 | soren granfeldt
+//  - added bugfix: Anchors that contain special characters like "&" cannot be found by the management agent.
+
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
