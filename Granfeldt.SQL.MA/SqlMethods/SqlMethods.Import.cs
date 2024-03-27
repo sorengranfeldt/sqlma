@@ -31,7 +31,7 @@ namespace Granfeldt
                 for (int i = 0; i < anchors.Count; i++)
                 {
                     if (i > 0) anchorList.Append(",");
-                    anchorList.AppendFormat("'{0}'", $"{anchors[i]}".Replace("'","''"));
+                    anchorList.AppendFormat("N'{0}'", $"{anchors[i]}".Replace("'","''"));
                 }
 
                 StringBuilder query = new StringBuilder();
