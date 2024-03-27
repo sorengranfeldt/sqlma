@@ -1,10 +1,13 @@
-﻿using System;
-using System.Data.SqlClient;
-
-// august 8, 2016 | soren granfeldt
+﻿// august 8, 2016 | soren granfeldt
 //	- changed string.Concat element order to fix buggy select scope_identity
 // september 20, 2022 | soren granfeldt
 //	- add throw to try/catch to bubble any errors up
+// march 27, 2024 | soren granfeldt
+//  - merged fix for bug where deletes are exported and softdeletes are used and the DeletedColumn is NULL instead of 0 then the delete is not processed.
+
+using System;
+using System.Data.SqlClient;
+
 
 namespace Granfeldt
 {
@@ -265,7 +268,7 @@ namespace Granfeldt
                 string query = null;
                 if (softDelete)
                 {
-                    query = string.Format("update {0} set [{1}] = 1 where ([{2}] = @anchor and [{3}] is not null and [{1}] <> 1)", Configuration.TableNameMulti, Configuration.DeletedColumn, Configuration.BackReferenceColumn, attributeName);
+                    query = string.Format("update {0} set [{1}] = 1 where ([{2}] = @anchor and [{3}] is not null and ([{1}] is null) or ([{1}] = 0))", Configuration.TableNameMulti, Configuration.DeletedColumn, Configuration.BackReferenceColumn, attributeName);
                 }
                 else
                 {
