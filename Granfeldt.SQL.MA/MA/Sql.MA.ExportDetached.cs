@@ -106,8 +106,6 @@ namespace Granfeldt
 
                             Tracer.TraceInformation("deleting-record type: {1}, anchor: {0}", objectClass, anchor);
                             methods.DeleteRecord(anchor, Configuration.HasMultivalueTable, handleSoftDeletion);
-                            results.CSEntryChangeResults.Add(CSEntryChangeResult.Create(exportChange.Identifier, attrchanges, MAExportError.Success));
-                            continue;
                         }
 
                         // if we get here its either an update or and add
@@ -126,44 +124,48 @@ namespace Granfeldt
                             attrchanges.Add(AttributeChange.CreateAttributeAdd(anchor, newAnchor));
                         }
 
-                        // updating attributes is common for add and update
-                        foreach (string attributeChange in exportChange.ChangedAttributeNames)
+                        if (exportChange.ObjectModificationType != ObjectModificationType.Delete)
                         {
-                            AttributeChange ac = exportChange.AttributeChanges[attributeChange];
-                            Tracer.TraceInformation("attribute-change {0}, {1}", ac.Name, ac.ModificationType);
-                            if (ac.IsMultiValued)
+
+                            // updating attributes is common for add and update
+                            foreach (string attributeChange in exportChange.ChangedAttributeNames)
                             {
-                                if (ac.ModificationType == AttributeModificationType.Delete)
+                                AttributeChange ac = exportChange.AttributeChanges[attributeChange];
+                                Tracer.TraceInformation("attribute-change {0}, {1}", ac.Name, ac.ModificationType);
+                                if (ac.IsMultiValued)
                                 {
-                                    methods.RemoveAllMultiValues(anchor, attributeChange, handleSoftDeletion);
+                                    if (ac.ModificationType == AttributeModificationType.Delete)
+                                    {
+                                        methods.RemoveAllMultiValues(anchor, attributeChange, handleSoftDeletion);
+                                        continue;
+                                    }
+                                    foreach (ValueChange vc in ac.ValueChanges)
+                                    {
+                                        switch (vc.ModificationType)
+                                        {
+                                            case ValueModificationType.Add:
+                                                methods.AddMultiValue(anchor, attributeChange, vc.Value);
+                                                break;
+                                            case ValueModificationType.Delete:
+                                                methods.DeleteMultiValue(anchor, attributeChange, vc.Value, handleSoftDeletion);
+                                                break;
+                                        }
+                                    }
                                     continue;
                                 }
-                                foreach (ValueChange vc in ac.ValueChanges)
+                                if (ac.ModificationType == AttributeModificationType.Delete)
                                 {
-                                    switch (vc.ModificationType)
-                                    {
-                                        case ValueModificationType.Add:
-                                            methods.AddMultiValue(anchor, attributeChange, vc.Value);
-                                            break;
-                                        case ValueModificationType.Delete:
-                                            methods.DeleteMultiValue(anchor, attributeChange, vc.Value, handleSoftDeletion);
-                                            break;
-                                    }
+                                    methods.DeleteSingleValue(anchor, attributeChange);
+                                    continue;
                                 }
-                                continue;
+                                foreach (ValueChange vc in ac.ValueChanges.Where(x => x.ModificationType == ValueModificationType.Add))
+                                {
+                                    Tracer.TraceInformation("singlevalue-change {0}, {1}", vc.ModificationType, vc.Value);
+                                    methods.AddSingleValue(anchor, attributeChange, vc.Value);
+                                }
                             }
-                            if (ac.ModificationType == AttributeModificationType.Delete)
-                            {
-                                methods.DeleteSingleValue(anchor, attributeChange);
-                                continue;
-                            }
-                            foreach (ValueChange vc in ac.ValueChanges.Where(x => x.ModificationType == ValueModificationType.Add))
-                            {
-                                Tracer.TraceInformation("singlevalue-change {0}, {1}", vc.ModificationType, vc.Value);
-                                methods.AddSingleValue(anchor, attributeChange, vc.Value);
-                            }
-                        }
 
+                        }
                         if (Configuration.RunAfterObjectExport)
                         {
                             List<SqlParameter> parameters = new List<SqlParameter>();
