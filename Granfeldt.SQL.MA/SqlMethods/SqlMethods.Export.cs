@@ -42,7 +42,7 @@ namespace Granfeldt
                     cmd.Parameters.AddWithValue("@anchor", anchor);
                     cmd.Parameters.AddWithValue("@objectclass", objectClass);
                     Tracer.TraceInformation("run-query {0}", query);
-                    newId = (object)cmd.ExecuteScalar();
+                    newId = cmd.ExecuteScalar();
                     if (newId == null)
                     {
                         Tracer.TraceInformation("no-new-anchor-returned (scope_identity)");
@@ -88,7 +88,6 @@ namespace Granfeldt
             {
                 Tracer.Exit(nameof(ExistRecord));
             }
-            return false;
         }
         public void Undelete(object anchor)
         {
