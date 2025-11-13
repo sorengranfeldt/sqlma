@@ -124,9 +124,8 @@ namespace Granfeldt
                             attrchanges.Add(AttributeChange.CreateAttributeAdd(anchor, newAnchor));
                         }
 
-                        if (exportChange.ObjectModificationType != ObjectModificationType.Delete)
+                        if (exportChange.ObjectModificationType != ObjectModificationType.Delete) // only update attributes if not a delete
                         {
-
                             // updating attributes is common for add and update
                             foreach (string attributeChange in exportChange.ChangedAttributeNames)
                             {
@@ -164,8 +163,8 @@ namespace Granfeldt
                                     methods.AddSingleValue(anchor, attributeChange, vc.Value);
                                 }
                             }
-
                         }
+
                         if (Configuration.RunAfterObjectExport)
                         {
                             List<SqlParameter> parameters = new List<SqlParameter>();
