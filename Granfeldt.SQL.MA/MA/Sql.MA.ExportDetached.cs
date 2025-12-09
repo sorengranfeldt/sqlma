@@ -106,7 +106,6 @@ namespace Granfeldt
 
                             Tracer.TraceInformation("deleting-record type: {1}, anchor: {0}", objectClass, anchor);
                             methods.DeleteRecord(anchor, Configuration.HasMultivalueTable, handleSoftDeletion);
-                            results.CSEntryChangeResults.Add(CSEntryChangeResult.Create(exportChange.Identifier, attrchanges, MAExportError.Success));
                         }
 
                         // if we get here its either an update or and add
